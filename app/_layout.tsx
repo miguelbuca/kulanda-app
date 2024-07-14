@@ -3,6 +3,7 @@ import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
 import { NativeWindStyleSheet } from "nativewind";
 import { useEffect } from "react";
 import { View } from "react-native";
@@ -46,9 +47,24 @@ function RootLayoutNav() {
         <Stack
           screenOptions={{
             headerShown: false,
-            animation: "none",
+            animation: 'none'
           }}
-        />
+        >
+          <Stack.Screen
+            name="index"
+            options={{
+              headerShown: true,
+              title: "Autenticação",
+            }}
+          />
+          <Stack.Screen
+            name="tenant"
+            options={{
+              headerShown: true,
+              title: "Assinatura",
+            }}
+          />
+        </Stack>
       </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );

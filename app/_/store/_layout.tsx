@@ -49,19 +49,9 @@ const StoreLayout = () => {
               }}
             >
               <Stack.Screen
-                name="order-settings"
+                name="settings"
                 options={{
-                  headerTitle: () => (
-                    <View className="flex items-center justify-center flex-col">
-                      <Text className="text-bold font-bold mb-1.5">
-                        Tributos
-                      </Text>
-                      <Text className="opacity-50 capitalize text-xs">
-                        Descontos, taxas e impostos
-                      </Text>
-                    </View>
-                  ),
-                  presentation: "modal",
+                  title: "Gestão do estabelecimento",
                   headerShown: true,
                 }}
               />
@@ -115,6 +105,19 @@ const StoreLayout = () => {
               }}
             />
             <Tabs.Screen
+              name="chart"
+              options={{
+                title: "Relatório de Vendas",
+                tabBarIcon: ({ focused, color, size }) => (
+                  <Ionicons
+                    name={focused ? "pie-chart" : "pie-chart-outline"}
+                    color={color}
+                    size={size}
+                  />
+                ),
+              }}
+            />
+            <Tabs.Screen
               name="scan"
               options={{
                 title: "Leia o QrCode",
@@ -128,12 +131,18 @@ const StoreLayout = () => {
               }}
             />
             <Tabs.Screen
-              name="chart"
+              name="settings"
               options={{
-                title: "Relatório de Vendas",
+                headerShown: true,
+                title: "Gestão do estabelecimento",
+                tabBarItemStyle: {
+                  display: ["OWNER", "MANAGER"].includes(user.access)
+                    ? "flex"
+                    : "none",
+                },
                 tabBarIcon: ({ focused, color, size }) => (
                   <Ionicons
-                    name={focused ? "pie-chart" : "pie-chart-outline"}
+                    name={focused ? "settings" : "settings-outline"}
                     color={color}
                     size={size}
                   />
@@ -151,23 +160,6 @@ const StoreLayout = () => {
                     size={size}
                   />
                 ),
-              }}
-            />
-            <Tabs.Screen
-              name="order-settings"
-              options={{
-                headerTitle: () => (
-                  <View className="flex items-center justify-center flex-col">
-                    <Text className="text-bold font-bold mb-0.5">Tributos</Text>
-                    <Text className="opacity-50 capitalize text-xs">
-                      Descontos, taxas e impostos
-                    </Text>
-                  </View>
-                ),
-                headerShown: true,
-                tabBarItemStyle: {
-                  display: "none",
-                },
               }}
             />
           </Tabs>

@@ -27,8 +27,10 @@ export const Order = ({ onClose }: OrderProps) => {
     <SafeAreaView
       className={
         type === "PHONE"
-          ? "flex flex-col "
-          : "flex flex-col bg-white border-l border-l-gray-200 max-w-[350px]"
+          ? "flex flex-col"
+          : `flex flex-col bg-white border-l border-l-gray-200 ${
+              type !== "DESKTOP" ? "w-[350px]" : "w-[400px]"
+            }`
       }
     >
       <View className={type === "PHONE" ? "mt-0" : "mt-6"}>

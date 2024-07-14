@@ -7,19 +7,21 @@ import {
 import { setContext } from "@apollo/client/link/context";
 import { storage } from "../services";
 
-export async function getAccessTokenPromise() {
-  return await storage.getValueFor("_kt");
+export async function getCredentials() {
+  return {
+    "x-tenant-username": await storage.getValueFor("x-tenant-username"),
+    "x-tenant-key": await storage.getValueFor("x-tenant-key"),
+    authorization: `Bearer ${await storage.getValueFor("_kt")}`,
+  };
 }
 
 export const authorized = setContext(async (_, { headers }) => {
-  // get the authentication token from local storage if it exists
-  const token = await getAccessTokenPromise();
-
+ 
   // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
-      authorization: `Bearer ${token}`,
+      ...(await getCredentials()),
     },
   };
 });

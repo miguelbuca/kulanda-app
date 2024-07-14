@@ -8,21 +8,23 @@ export const GET_USER = gql`
       email
       phone
       access
-      companies {
+      storeId
+    }
+  }
+`;
+
+export const GET_COMPANY = gql`
+  query GetCompany {
+    getCompany {
+      id
+      nif
+      name
+      logo
+      stores {
         id
-        name
-        logo
-        nif
-        cae {
-          id
-          name
-        }
-        stores {
-          id
-          designation
-          address
-          phone
-        }
+        designation
+        address
+        phone
       }
     }
   }

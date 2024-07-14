@@ -35,7 +35,7 @@ export const Products = ({ filter }: ProductsProps) => {
   return (
     <View
       className={`${
-        type !== "PHONE" ? "px-10" : "px-4"
+        type !== "PHONE" ? "px-10 gap-3" : "px-4 gap-2"
       } py-5 flex-row flex-wrap justify-between`}
     >
       {data.map((item, index) => (
@@ -43,11 +43,11 @@ export const Products = ({ filter }: ProductsProps) => {
           style={
             type !== "PHONE"
               ? {
-                  width: "32%",
+                  width: 260,
                   marginBottom: 8,
                 }
               : {
-                  width: "49%",
+                  width: "47%",
                   marginBottom: 8,
                 }
           }
@@ -56,7 +56,9 @@ export const Products = ({ filter }: ProductsProps) => {
           }}
           key={index}
         >
-          <View className="flex max-h-fit flex-col bg-white shadow-sm p-2 w-full rounded-md">
+          <View className={`flex ${
+                type !== "PHONE" ? "h-[340px]" : "h-[230px]"
+              } flex-col bg-white shadow-sm p-2 w-full rounded-md`}>
             <View
               className={`relative ${
                 type !== "PHONE" ? "h-48" : "h-28"
@@ -69,12 +71,12 @@ export const Products = ({ filter }: ProductsProps) => {
                 }}
               />
             </View>
-            <View className="flex flex-col">
+            <View className="flex flex-col flex-1">
               <Text
                 ellipsizeMode="tail"
                 numberOfLines={2}
                 className={`mt-2 ${
-                  type !== "PHONE" ? "text-lg" : "text-sm"
+                  type !== "PHONE" ? "text-md" : "text-sm"
                 } font-semibold`}
               >
                 {item.name}
@@ -83,7 +85,7 @@ export const Products = ({ filter }: ProductsProps) => {
               <Text
                 ellipsizeMode="tail"
                 numberOfLines={2}
-                className={`my-2 ${
+                className={`my-2 flex-1 ${
                   type !== "PHONE" ? "text-md" : "text-xs"
                 } opacity-50`}
               >

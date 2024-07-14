@@ -11,8 +11,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { theme } from "@/tailwind.config";
 
 import { useRouter } from "expo-router";
+import { useAuth } from "../hooks/use-auth";
 
-type Tab = "Profile" | "Main" | "Chart" | "Scan";
+type Tab = "Profile" | "Main" | "Chart" | "Scan" | "Settings";
 
 export interface IStoreNavStore {
   currentTab: Tab;
@@ -23,6 +24,7 @@ export interface IStoreNavStore {
 const tintColor = theme?.extend.colors.primary[500];
 
 export const StoreNav = () => {
+  const { user } = useAuth();
   const [currentTab, setCurrentTab] = useState<Tab>("Main");
   const route = useRouter();
 
@@ -66,6 +68,7 @@ export const StoreNav = () => {
             <TouchableOpacity
               onPress={() => {
                 setCurrentTab("Scan");
+                route.push("/_/store/scan");
               }}
             >
               <View>
@@ -132,15 +135,40 @@ export const StoreNav = () => {
                 )}
               </View>
             </TouchableOpacity>
+            {["OWNER", "MANAGER"].includes(user.access) && (
+              <TouchableOpacity
+                onPress={() => {
+                  setCurrentTab("Settings");
+                  route.push("/_/store/settings");
+                }}
+              >
+                <View>
+                  <Ionicons
+                    name={
+                      currentTab === "Settings"
+                        ? "settings"
+                        : "settings-outline"
+                    }
+                    size={25}
+                    color={
+                      currentTab === "Settings" ? tintColor : "rgba(0,0,0,0.5)"
+                    }
+                  />
+                  {currentTab === "Settings" && (
+                    <View
+                      style={{
+                        backgroundColor: tintColor,
+                      }}
+                      className="absolute -right-[30px] w-2 -bottom-1 h-9"
+                    />
+                  )}
+                </View>
+              </TouchableOpacity>
+            )}
           </View>
         </View>
         <View className="py-8">
           <View className="flex items-center gap-y-8">
-            <TouchableOpacity>
-              <View className="opacity-50">
-                <Ionicons name="settings-outline" size={25} />
-              </View>
-            </TouchableOpacity>
             <TouchableOpacity>
               <View className="opacity-50">
                 <Ionicons name="log-out-outline" size={25} />

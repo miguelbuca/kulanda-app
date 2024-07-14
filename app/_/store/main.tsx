@@ -106,18 +106,6 @@ const Main = () => {
                 </Text>
               </View>
             </View>
-            {user.access === "OWNER" && (
-              <TouchableOpacity>
-                <View className="flex flex-row p-2 items-center bg-primary-500 rounded-[100px]">
-                  <Text className="text-white font-semibold mx-2 text-base">
-                    Gerir loja
-                  </Text>
-                  <View className="bg-white p-2 rounded-full">
-                    <Ionicons name="storefront-outline" size={25} />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            )}
           </View>
           <View className="flex-1 flex flex-col pt-0">
             <Categories onPress={setSelectedCategory} />
