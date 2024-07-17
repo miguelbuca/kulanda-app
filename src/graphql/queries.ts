@@ -224,3 +224,15 @@ export const GET_SALE_BY_STORE = gql`
     }
   }
 `;
+
+export const GET_CHARGES_BY_STORE = gql`
+  query GetChargesByStore($storeId: ID!) {
+    getChargesByStore(storeId: $storeId) {
+      id
+      name
+      acronym
+      percentage
+      type
+    }
+  }
+`;

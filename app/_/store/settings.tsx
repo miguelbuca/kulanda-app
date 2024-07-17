@@ -1,6 +1,7 @@
 import { Accordion, AccordionProps, Table, TableProps } from "@/src/components";
 import {
   GET_CATEGORIES,
+  GET_CHARGES_BY_STORE,
   GET_PRODUCTS_BY_STORE,
   GET_SALE_BY_STORE,
   GET_SERVICES_BY_STORE,
@@ -65,8 +66,8 @@ const Settings = () => {
     },
     {
       name: "Tibutos",
-      icon: <Ionicons name="pricetags-outline" size={24} />,
-      document: GET_CATEGORIES,
+      icon: <Feather name="percent" size={22} />,
+      document: GET_CHARGES_BY_STORE,
       withAddEvent() {
         console.log("add new taxs!!");
       },
