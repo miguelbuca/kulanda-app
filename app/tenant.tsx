@@ -45,7 +45,7 @@ const Tenant = () => {
       className="flex flex-col flex-1 justify-center items-center bg-gray-50"
     >
       <View className="flex flex-col items-center justify-center w-full px-6">
-        <View className="flex flex-col bg-white w-[320px] p-6 gap-y-4 rounded-xl shadow-sm">
+        <View className="flex flex-col bg-white w-[90%] max-w-[350px] p-6 gap-y-4 rounded-xl shadow-sm">
           <View>
             <Controller
               control={control}

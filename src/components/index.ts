@@ -8,3 +8,5 @@ export * from "./orders";
 export * from "./order";
 export * from "./profile-tab";
 export * from "./error-box";
+export * from "./accordion";
+export * from "./table";

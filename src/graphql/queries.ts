@@ -70,8 +70,25 @@ export const GET_PRODUCTS_BY_STORE = gql`
   }
 `;
 
+export const GET_SERVICES_BY_STORE = gql`
+  query getServices($storeId: ID!, $filter: FilterServiceInput) {
+    getServices(storeId: $storeId, filter: $filter) {
+      id
+      name
+      image
+      description
+      price
+      category {
+        id
+        name
+        type
+      }
+    }
+  }
+`;
+
 export const GET_SALE_BY_ID = gql`
-  query GetStore($id: ID!) {
+  query GetSale($id: ID!) {
     getSale(id: $id) {
       id
       change
@@ -137,6 +154,70 @@ export const GET_STORE_REPORT = gql`
               name
               type
             }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_CATEGORIES = gql`
+  query GetCategories {
+    getCategories {
+      id
+      name
+      description
+      type
+    }
+  }
+`;
+
+export const GET_USERS = gql`
+  query GetUsers {
+    getUsers {
+      id
+      fullName
+      email
+      phone
+      access
+    }
+  }
+`;
+
+export const GET_SALE_BY_STORE = gql`
+  query GetSales($storeId: ID!) {
+    getSales(storeId: $storeId) {
+      id
+      change
+      cash
+      bankCard
+      totalPrice
+      code
+      seller {
+        id
+        fullName
+        phone
+      }
+      orders {
+        id
+        products {
+          id
+          name
+          description
+          image
+          price
+          category {
+            type
+          }
+        }
+        services {
+          id
+          name
+          description
+          image
+          price
+          category {
+            type
           }
         }
       }

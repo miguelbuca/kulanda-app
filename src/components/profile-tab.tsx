@@ -12,9 +12,10 @@ export interface ProfileTabProps {
 export const ProfileTab = ({ index }: ProfileTabProps) => {
   const navigation = useNavigation();
   const logOut = useCallback(() => {
-    storage.deleteValueFor("_kt").then(() => {
-      navigation.dispatch(StackActions.replace("index"));
-    });
+    storage.deleteValueFor("x-tenant-username");
+    storage.deleteValueFor("x-tenant-key");
+    storage.deleteValueFor("_kt");
+    navigation.dispatch(StackActions.replace("index"));
   }, [storage]);
 
   return index === 0 ? (

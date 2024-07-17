@@ -64,7 +64,7 @@ const Payment = () => {
   }, [totalPrice, items, bankCard, change, cash, reset]);
 
   return (
-    <SafeAreaView className="flex flex-col flex-1 p-6 bg-white gap-y-3">
+    <SafeAreaView className="flex flex-col flex-1 p-6 bg-gray-100 gap-y-3">
       <ScrollView className="flex-1 p-6">
         <View className="p-6 items-center justify-center">
           <Text className="text-3xl">{formatMoney(subtotalPrice)}</Text>
@@ -77,6 +77,7 @@ const Payment = () => {
               onChangeText={(value) => setFormData?.(Number(value), "cash")}
               placeholder={formatMoney(0)}
               keyboardType="decimal-pad"
+              className="bg-white"
             />
           </View>
           <View>
@@ -85,6 +86,7 @@ const Payment = () => {
               onChangeText={(value) => setFormData?.(Number(value), "bankCard")}
               placeholder={formatMoney(0)}
               keyboardType="decimal-pad"
+              className="bg-white"
             />
           </View>
           <View>
@@ -94,6 +96,7 @@ const Payment = () => {
               value={change > 0 ? formatMoney(change) : undefined}
               placeholder={formatMoney(0)}
               keyboardType="decimal-pad"
+              className="bg-white"
             />
           </View>
         </View>

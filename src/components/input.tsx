@@ -6,7 +6,7 @@ export const Input = ({
   ...props
 }: TextInputProps & { error?: string }) => {
   return (
-    <View className="flex flex-1 flex-col">
+    <>
       <TextInput
         placeholderTextColor={"#ccc"}
         className={`text-black bg-gray-100/50 outline-none text-base border p-3 ${
@@ -17,6 +17,6 @@ export const Input = ({
       {props.error && (
         <Text className="my-2 text-xs text-red-400">{props.error}</Text>
       )}
-    </View>
+    </>
   );
 };

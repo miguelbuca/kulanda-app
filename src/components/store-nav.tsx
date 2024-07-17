@@ -31,7 +31,7 @@ export const StoreNav = () => {
   return (
     <SafeAreaView className="relative flex-1 border-r border-r-gray-200">
       <View className="flex-1 flex flex-col px-4 divide-y divide-gray-200">
-        <View className="py-8 h-[80px] w-10 mt-8">
+        <View className="py-4 h-[60px] w-10">
           <View className="flex flex-1 items-center justify-center">
             <Image
               className="w-8 h-8"
@@ -111,30 +111,6 @@ export const StoreNav = () => {
                 )}
               </View>
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                setCurrentTab("Profile");
-                route.push("/_/store/profile");
-              }}
-            >
-              <View>
-                <Ionicons
-                  name={currentTab === "Profile" ? "person" : "person-outline"}
-                  size={25}
-                  color={
-                    currentTab === "Profile" ? tintColor : "rgba(0,0,0,0.5)"
-                  }
-                />
-                {currentTab === "Profile" && (
-                  <View
-                    style={{
-                      backgroundColor: tintColor,
-                    }}
-                    className="absolute -right-[30px] w-2 -bottom-1 h-9"
-                  />
-                )}
-              </View>
-            </TouchableOpacity>
             {["OWNER", "MANAGER"].includes(user.access) && (
               <TouchableOpacity
                 onPress={() => {
@@ -165,6 +141,30 @@ export const StoreNav = () => {
                 </View>
               </TouchableOpacity>
             )}
+            <TouchableOpacity
+              onPress={() => {
+                setCurrentTab("Profile");
+                route.push("/_/store/profile");
+              }}
+            >
+              <View>
+                <Ionicons
+                  name={currentTab === "Profile" ? "person" : "person-outline"}
+                  size={25}
+                  color={
+                    currentTab === "Profile" ? tintColor : "rgba(0,0,0,0.5)"
+                  }
+                />
+                {currentTab === "Profile" && (
+                  <View
+                    style={{
+                      backgroundColor: tintColor,
+                    }}
+                    className="absolute -right-[30px] w-2 -bottom-1 h-9"
+                  />
+                )}
+              </View>
+            </TouchableOpacity>
           </View>
         </View>
         <View className="py-8">

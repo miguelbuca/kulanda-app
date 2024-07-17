@@ -73,11 +73,15 @@ export default function SignIn() {
   const checkTenant = useCallback(async () => {
     const xTenantUserName = await storage.getValueFor("x-tenant-username");
     const xTenantKey = await storage.getValueFor("x-tenant-key");
+
+    
     if (xTenantUserName !== null || xTenantKey !== null) {
       setIsValidTenant(true);
     } else {
+      SplashScreen.hideAsync()
       setIsValidTenant(false);
     }
+    SplashScreen.hideAsync()
   }, []);
 
   useEffect(() => {
@@ -87,7 +91,7 @@ export default function SignIn() {
   return (
     <View className="flex flex-col flex-1 justify-center items-center bg-gray-50">
       <View className="flex flex-col items-center justify-center w-full px-6">
-        <View className="flex flex-col bg-white w-[320px] p-6 gap-y-4 rounded-xl shadow-sm">
+        <View className="flex flex-col bg-white w-[90%] max-w-[350px] p-6 gap-y-4 rounded-xl shadow-sm">
           <Input
             placeholder="Telemóvel ou e-mail"
             onChangeText={(text) => setEmailOrPhone(text)}
