@@ -44,7 +44,7 @@ export const StoreNav = () => {
             <TouchableOpacity
               onPress={() => {
                 setCurrentTab("Main");
-                route.push("/_/store/main");
+                route.push("/_/store/main/main");
               }}
             >
               <View>
@@ -68,7 +68,7 @@ export const StoreNav = () => {
             <TouchableOpacity
               onPress={() => {
                 setCurrentTab("Scan");
-                route.push("/_/store/scan");
+                route.push("/_/store/main/scan");
               }}
             >
               <View>
@@ -90,7 +90,7 @@ export const StoreNav = () => {
             <TouchableOpacity
               onPress={() => {
                 setCurrentTab("Chart");
-                route.push("/_/store/chart");
+                route.push("/_/store/main/chart");
               }}
             >
               <View>
@@ -115,7 +115,7 @@ export const StoreNav = () => {
               <TouchableOpacity
                 onPress={() => {
                   setCurrentTab("Settings");
-                  route.push("/_/store/settings");
+                  route.push("/_/store/main/settings");
                 }}
               >
                 <View>
@@ -144,7 +144,7 @@ export const StoreNav = () => {
             <TouchableOpacity
               onPress={() => {
                 setCurrentTab("Profile");
-                route.push("/_/store/profile");
+                route.push("/_/store/main/profile");
               }}
             >
               <View>

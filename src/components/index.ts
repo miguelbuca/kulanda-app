@@ -10,3 +10,4 @@ export * from "./profile-tab";
 export * from "./error-box";
 export * from "./accordion";
 export * from "./table";
+export * from "./user-form";

@@ -1,3 +1,4 @@
+import React from "react";
 import { Accordion, AccordionProps, Table, TableProps } from "@/src/components";
 import {
   GET_CATEGORIES,
@@ -11,10 +12,10 @@ import { useDevice } from "@/src/hooks/use-device";
 import { formatMoney } from "@/src/utils/format-money";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { parsePhoneNumber } from "libphonenumber-js";
-import React from "react";
 import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import * as Linking from "expo-linking";
 import { Barcode } from "expo-barcode-generator";
+import { useRouter } from "expo-router";
 
 interface TablePropsList
   extends TableProps,
@@ -22,6 +23,7 @@ interface TablePropsList
 
 const Settings = () => {
   const { type } = useDevice();
+  const route = useRouter();
 
   const tables: TablePropsList[] = [
     {
@@ -29,7 +31,17 @@ const Settings = () => {
       icon: <Ionicons name="person-outline" size={24} />,
       document: GET_USERS,
       withAddEvent() {
-        console.log("add new user!!");
+        route.push("_/store/au/user/create");
+      },
+      onEventHandler(type, value: UserType) {
+        switch (type) {
+          case "edit":
+            route.push("_/store/au/user/" + value.id);
+            break;
+
+          default:
+            break;
+        }
       },
       renderCell: {
         phone: (value) => {
