@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { View } from "react-native";
-import React, { useCallback } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 
 import * as z from "zod";
@@ -9,21 +9,18 @@ import { useDevice } from "../hooks/use-device";
 import { Select } from "./select";
 import { Input } from "./input";
 import { Button } from "./button";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_USER } from "../graphql/mutations";
 import { client } from "../api/client";
 import { useRouter } from "expo-router";
 import { useStore } from "../hooks/use-store";
+import { GET_USER_BY_ID } from "../graphql/queries";
 
 const schema = z.object({
   username: z
     .string()
     .min(4, "username is too short. Minimal length is 4 characters")
-    .max(29, "username is too long. Maximal length is 20 characters")
-    .regex(
-      /^[a-zA-Z0-9_]+$/,
-      "Client username can only contain letters, numbers, and underscores"
-    ),
+    .max(29, "username is too long. Maximal length is 20 characters"),
   fullName: z
     .string()
     .min(2, "fullname is too short. Minimal length is 4 characters")
@@ -31,19 +28,21 @@ const schema = z.object({
   email: z.string().email(),
   access: z.string(),
   phone: z.string(),
-  password: z.string(),
+  password: z.string().optional(),
 });
 
 export interface UserFormProps {
   userId?: string;
 }
 
-export const UserForm = ({}: UserFormProps) => {
+export const UserForm = ({ userId }: UserFormProps) => {
   const { store } = useStore();
   const { type } = useDevice();
+  const [user, setUser] = useState<UserType>();
+  const [passwordChange, setPasswordChange] = useState(!userId);
   const route = useRouter();
 
-  const [signUp, { loading }] = useMutation(CREATE_USER, {
+  const [signUp, { loading: createLoading }] = useMutation(CREATE_USER, {
     client: client,
     onCompleted(data) {
       if (data.signUp?.access_token) route.back();
@@ -53,17 +52,34 @@ export const UserForm = ({}: UserFormProps) => {
     },
   });
 
+  useQuery(GET_USER_BY_ID, {
+    client: client,
+    variables: {
+      id: userId,
+    },
+    onCompleted(data) {
+      delete data.getUser.__typename;
+      setUser(data.getUser);
+    },
+  });
+
   const handleSaveTenant = useCallback(
     (values: z.infer<typeof schema>) => {
-      signUp({
-        variables: { ...values, storeId: store.id },
-      });
+      if (!userId)
+        signUp({
+          variables: {
+            ...values,
+            storeId: store.id,
+          },
+        });
     },
-    [signUp, route, store]
+    [signUp, route, store, userId]
   );
 
   const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
-    defaultValues: {},
+    values: {
+      ...user,
+    } as any,
     resolver: zodResolver(schema),
   });
 
@@ -125,8 +141,9 @@ export const UserForm = ({}: UserFormProps) => {
             <View>
               <Controller
                 control={control}
-                render={({ field: { onChange }, formState }) => (
+                render={({ field: { onChange, value }, formState }) => (
                   <Select
+                    value={value}
                     placeholder="Permição de acesso"
                     items={[
                       {
@@ -166,27 +183,41 @@ export const UserForm = ({}: UserFormProps) => {
             </View>
           </View>
         </View>
+
         <View className="flex flex-col">
-          <View>
-            <Controller
-              control={control}
-              render={({ field: { onChange, onBlur, value }, formState }) => (
-                <Input
-                  value={value}
-                  placeholder="Palavra passe"
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  errorMessage={formState.errors.password?.message}
-                />
-              )}
-              name="password"
-            />
-          </View>
+          {passwordChange ? (
+            <View>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value }, formState }) => (
+                  <Input
+                    value={value ?? ""}
+                    placeholder="Palavra passe"
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    errorMessage={formState.errors.password?.message}
+                  />
+                )}
+                name="password"
+              />
+            </View>
+          ) : (
+            <TouchableOpacity
+              onPress={() => setPasswordChange((prev) => !prev)}
+            >
+              <View className="flex items-center justify-center py-4 mt-4">
+                <Text className="text-blue-500 font-semibold">
+                  Alterar palavra passe
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
         </View>
+
         <View className="flex mt-4">
           <View>
             <Button
-              isLoading={loading}
+              isLoading={createLoading}
               onPress={handleSubmit(handleSaveTenant)}
             >
               Salvar

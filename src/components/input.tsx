@@ -6,7 +6,7 @@ import {
   ViewProps,
   Pressable,
 } from "react-native";
-import React, { FC, useRef, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import CurrencyInput, { CurrencyInputProps } from "react-native-currency-input";
 
 import PhoneInput from "react-native-phone-input";
@@ -16,6 +16,12 @@ import RNDateTimePicker, {
 } from "react-native-modal-datetime-picker";
 
 import { useColorScheme } from "nativewind";
+import {
+  formatNumber,
+  isPossibleNumber,
+  parseNumber,
+  parsePhoneNumber,
+} from "libphonenumber-js";
 
 export interface InputProps extends TextInputProps {
   errorMessage?: string;
@@ -31,7 +37,6 @@ export const Input = ({
   isPhone,
   ...args
 }: InputProps) => {
-  const phoneInputRef = useRef<TextInput>();
   return (
     <>
       <View
@@ -54,16 +59,22 @@ export const Input = ({
           />
         ) : (
           <PhoneInput
-            initialValue={args.value}
+            textProps={
+              args.value
+                ? {
+                    value: isPossibleNumber(args.value)
+                      ? parsePhoneNumber(args.value ?? "").formatInternational()
+                      : args.value,
+                  }
+                : undefined
+            }
             initialCountry="ao"
             className="h-12 px-2 flex-1 rounded-lg dark:text-white"
             autoFormat
-            ref={phoneInputRef as any}
             onChangePhoneNumber={(value) => {
               if (!value) return;
               args?.onChangeText?.(value?.split(" ").join(""));
             }}
-            {...args}
           />
         )}
       </View>

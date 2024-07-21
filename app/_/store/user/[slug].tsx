@@ -1,12 +1,16 @@
-import { View, Text, SafeAreaView } from 'react-native'
-import React from 'react'
+import { View, Text, SafeAreaView } from "react-native";
+import React from "react";
+import { useLocalSearchParams } from "expo-router";
+import { UserForm } from "@/src/components";
 
 const Update = () => {
-  return (
-    <SafeAreaView className="flex-1 bg-gray-50 p-6">
-      <Text>Update</Text>
-    </SafeAreaView>
-  )
-}
+  const params = useLocalSearchParams();
 
-export default Update
+  return (
+    <View className="flex-1 bg-gray-50 p-6">
+      <UserForm userId={params.slug as string} />
+    </View>
+  );
+};
+
+export default Update;
