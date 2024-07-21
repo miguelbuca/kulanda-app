@@ -8,6 +8,7 @@ export default function PrivateLayout() {
       <Stack
         screenOptions={{
           headerShown: true,
+          presentation: 'modal'
         }}
       >
         <Stack.Screen

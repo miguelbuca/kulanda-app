@@ -31,12 +31,12 @@ const Settings = () => {
       icon: <Ionicons name="person-outline" size={24} />,
       document: GET_USERS,
       withAddEvent() {
-        route.push("_/store/au/user/create");
+        route.push("_/store/user/create");
       },
       onEventHandler(type, value: UserType) {
         switch (type) {
           case "edit":
-            route.push("_/store/au/user/" + value.id);
+            route.push("_/store/user/" + value.id);
             break;
 
           default:

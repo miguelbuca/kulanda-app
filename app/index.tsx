@@ -74,14 +74,13 @@ export default function SignIn() {
     const xTenantUserName = await storage.getValueFor("x-tenant-username");
     const xTenantKey = await storage.getValueFor("x-tenant-key");
 
-    
     if (xTenantUserName !== null || xTenantKey !== null) {
       setIsValidTenant(true);
     } else {
-      SplashScreen.hideAsync()
+      SplashScreen.hideAsync();
       setIsValidTenant(false);
     }
-    SplashScreen.hideAsync()
+    SplashScreen.hideAsync();
   }, []);
 
   useEffect(() => {
@@ -92,18 +91,22 @@ export default function SignIn() {
     <View className="flex flex-col flex-1 justify-center items-center bg-gray-50">
       <View className="flex flex-col items-center justify-center w-full px-6">
         <View className="flex flex-col bg-white w-[90%] max-w-[350px] p-6 gap-y-4 rounded-xl shadow-sm">
-          <Input
-            placeholder="Telemóvel ou e-mail"
-            onChangeText={(text) => setEmailOrPhone(text)}
-          />
-          <Input
-            placeholder="Palavra passe"
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry
-          />
+          <View>
+            <Input
+              placeholder="Telemóvel ou e-mail"
+              onChangeText={(text) => setEmailOrPhone(text)}
+            />
+          </View>
+          <View>
+            <Input
+              placeholder="Palavra passe"
+              onChangeText={(text) => setPassword(text)}
+              secureTextEntry
+            />
+          </View>
           <Button onPress={() => login()}>Iniciar sessão</Button>
           <View>
-            {!isValidTenant && (
+            {!isValidTenant ? (
               <>
                 <ErrorBox message="Não encontramos a assinatura do cliente" />
                 <TouchableOpacity onPress={() => route.push("/tenant")}>
@@ -112,6 +115,12 @@ export default function SignIn() {
                   </Text>
                 </TouchableOpacity>
               </>
+            ) : (
+              <TouchableOpacity onPress={() => route.push("/tenant")}>
+                <Text className="mt-4 self-center text-base text-blue-500">
+                  Alterar assinatura
+                </Text>
+              </TouchableOpacity>
             )}
           </View>
         </View>

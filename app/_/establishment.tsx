@@ -19,12 +19,13 @@ import { client } from "@/src/api/client";
 import { useQuery } from "@apollo/client";
 import { useStore } from "@/src/hooks/use-store";
 import { Button } from "@/src/components";
+import { useCompany } from "@/src/hooks/use-company";
 
 const Switch = () => {
   const { replace } = useRouter();
   const { setStore } = useStore();
+  const { company, setCompany } = useCompany();
   const [stores, setStores] = useState<StoreType[]>([]);
-  const [company, setCompany] = useState<CompanyType>();
 
   useQuery(GET_COMPANY, {
     client: client,

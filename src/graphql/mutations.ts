@@ -32,3 +32,27 @@ export const CREATE_SALE = gql`
     }
   }
 `;
+
+export const CREATE_USER = gql`
+  mutation SignUp(
+    $fullName: String!
+    $username: String
+    $email: String!
+    $phone: String
+    $access: AccessEnumType = SELLER
+    $storeId: ID!
+    $password: String!
+  ) {
+    signUp(
+      fullName: $fullName
+      username: $username
+      email: $email
+      phone: $phone
+      access: $access
+      password: $password
+      storeId: $storeId
+    ) {
+      access_token
+    }
+  }
+`;

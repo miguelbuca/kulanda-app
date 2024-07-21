@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Dimensions,
+  Image,
 } from "react-native";
 import React, {
   useCallback,
@@ -110,12 +111,14 @@ const Main = () => {
           <View className="flex-1 flex flex-col pt-0">
             <Categories onPress={setSelectedCategory} />
             <View className="flex flex-row px-10 items-center">
-              <Input
-                placeholder="Encontrar produto, serviço..."
-                className="flex-1 bg-white shadow-sm mr-4"
-                onChangeText={setName}
-              />
-              <View>
+              <View className="flex-1">
+                <Input
+                  className="border border-primary-500 bg-white shadow-sm"
+                  placeholder="Encontrar produto, serviço..."
+                  onChangeText={setName}
+                />
+              </View>
+              <View className="ml-3">
                 <Button className="flex items-center justify-center p-3 h-auto bg-white shadow-sm">
                   <Ionicons
                     name="options-outline"
@@ -141,13 +144,15 @@ const Main = () => {
       <ScrollView>
         <View className="flex flex-col">
           <View className="flex flex-row px-4 items-center mt-6 mb-4">
-            <Input
-              placeholder="Encontrar produto, serviço..."
-              className="flex-1 bg-white shadow-sm mr-4 text-sm"
-              placeholderTextColor={"gray"}
-              onChangeText={setName}
-            />
-            <View>
+            <View className="flex flex-1">
+              <Input
+                placeholder="Encontrar produto, serviço..."
+                placeholderTextColor={"gray"}
+                className="border border-primary-500 bg-white shadow-sm"
+                onChangeText={setName}
+              />
+            </View>
+            <View className="ml-3">
               <Button className="flex items-center justify-center p-3 h-auto bg-white shadow-sm">
                 <Ionicons
                   name="options-outline"

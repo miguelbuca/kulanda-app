@@ -16,8 +16,16 @@ const StoreLayout = () => {
       <Stack
         screenOptions={{
           headerShown: false,
+          presentation: "formSheet",
         }}
-      />
+      >
+        <Stack.Screen
+          name="main"
+          options={{
+            presentation: undefined,
+          }}
+        />
+      </Stack>
     </View>
   );
 };

@@ -44,7 +44,7 @@ export const StoreNav = () => {
             <TouchableOpacity
               onPress={() => {
                 setCurrentTab("Main");
-                route.push("/_/store/main/main");
+                route.push("/_/store/main");
               }}
             >
               <View>

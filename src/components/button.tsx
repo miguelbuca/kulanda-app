@@ -3,24 +3,26 @@ import {
   Text,
   TouchableOpacityProps,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React from "react";
 
 export const Button = ({
+  isLoading,
   children,
   className,
   ...props
-}: TouchableOpacityProps) => {
+}: TouchableOpacityProps & {isLoading?: boolean}) => {
   return (
     <TouchableOpacity {...props}>
       <View
-        className={`bg-primary-500 py-4 w-full flex items-center justify-center rounded-xl ${className}`}
+        className={`bg-primary-500 h-14 py-3 w-full flex items-center justify-center rounded-xl ${className}`}
       >
-        {typeof children === "string" ? (
+        {!isLoading ? (typeof children === "string" ? (
           <Text className="font-bold text-white text-base">{children}</Text>
         ) : (
           children
-        )}
+        )):(<ActivityIndicator size={"small"} color={'#ffffff'} />)}
       </View>
     </TouchableOpacity>
   );

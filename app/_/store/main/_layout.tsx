@@ -14,7 +14,7 @@ import { useDevice } from "@/src/hooks/use-device";
 import { useAuth } from "@/src/hooks/use-auth";
 import { useOrder } from "@/src/hooks/use-order";
 
-const MainLaayout = () => {
+const StoreLayout = () => {
   const { user } = useAuth();
   const { store, setStore } = useStore();
   const { type } = useDevice();
@@ -39,6 +39,7 @@ const MainLaayout = () => {
         <View className="flex-1 flex-row bg-white">
           <View className="flex-1">
             <Stack
+              initialRouteName="index"
               screenOptions={{
                 headerShown: false,
                 animation: "fade_from_bottom",
@@ -57,21 +58,25 @@ const MainLaayout = () => {
       ) : (
         <>
           <Tabs
+            initialRouteName="index"
             screenOptions={{
               tabBarActiveTintColor: theme.extend.colors.primary[500],
               tabBarShowLabel: false,
               headerShown: true,
+              headerTitleAlign: "center",
             }}
           >
             <Tabs.Screen
               name="index"
               options={{
                 headerLeft: () => (
-                  <View className="flex items-center justify-center ml-4">
-                    <Image
-                      className="w-5 h-5"
-                      source={require("@/assets/images/icon.png")}
-                    />
+                  <View className="py-4 h-[60px] w-10">
+                    <View className="flex flex-1 items-center justify-center">
+                      <Image
+                        className="w-8 h-8"
+                        source={require("@/assets/images/icon.png")}
+                      />
+                    </View>
                   </View>
                 ),
                 headerTitle: () => (
@@ -165,4 +170,4 @@ const MainLaayout = () => {
   );
 };
 
-export default MainLaayout;
+export default StoreLayout;

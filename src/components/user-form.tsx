@@ -1,25 +1,37 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { View, Text, SafeAreaView } from "react-native";
-import React, { useCallback, useState } from "react";
-import { SplashScreen, useRouter } from "expo-router";
-import { Button, Input } from "@/src/components";
-import { useForm } from "react-hook-form";
-import { Controller } from "react-hook-form";
+import { View } from "react-native";
+import React, { useCallback } from "react";
+import { useForm, Controller } from "react-hook-form";
 
 import * as z from "zod";
-import { storage } from "@/src/services";
 import { StatusBar } from "expo-status-bar";
+import { useDevice } from "../hooks/use-device";
+import { Select } from "./select";
+import { Input } from "./input";
+import { Button } from "./button";
+import { useMutation } from "@apollo/client";
+import { CREATE_USER } from "../graphql/mutations";
+import { client } from "../api/client";
+import { useRouter } from "expo-router";
+import { useStore } from "../hooks/use-store";
 
 const schema = z.object({
-  xTenantUserName: z
+  username: z
     .string()
-    .min(4, "Client username is too short. Minimal length is 4 characters")
-    .max(29, "Client username is too long. Maximal length is 20 characters")
+    .min(4, "username is too short. Minimal length is 4 characters")
+    .max(29, "username is too long. Maximal length is 20 characters")
     .regex(
       /^[a-zA-Z0-9_]+$/,
       "Client username can only contain letters, numbers, and underscores"
     ),
-  xTenantKey: z.string().regex(/^k_tnt_[a-zA-Z0-9]{8}$/, "Invalid key format"),
+  fullName: z
+    .string()
+    .min(2, "fullname is too short. Minimal length is 4 characters")
+    .max(29, "fullname is too long. Maximal length is 20 characters"),
+  email: z.string().email(),
+  access: z.string(),
+  phone: z.string(),
+  password: z.string(),
 });
 
 export interface UserFormProps {
@@ -27,24 +39,42 @@ export interface UserFormProps {
 }
 
 export const UserForm = ({}: UserFormProps) => {
-  const handleSaveTenant = useCallback((values: z.infer<typeof schema>) => {
-    console.log(values);
-  }, []);
+  const { store } = useStore();
+  const { type } = useDevice();
+  const route = useRouter();
+
+  const [signUp, { loading }] = useMutation(CREATE_USER, {
+    client: client,
+    onCompleted(data) {
+      if (data.signUp?.access_token) route.back();
+    },
+    onError(error) {
+      console.log(error.message);
+    },
+  });
+
+  const handleSaveTenant = useCallback(
+    (values: z.infer<typeof schema>) => {
+      signUp({
+        variables: { ...values, storeId: store.id },
+      });
+    },
+    [signUp, route, store]
+  );
 
   const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
-    defaultValues: {
-      xTenantUserName: "",
-      xTenantKey: "",
-    },
+    defaultValues: {},
     resolver: zodResolver(schema),
   });
 
   return (
     <>
       <View className="flex flex-col  bg-white p-6 rounded-xl shadow-sm">
-        <View className="flex flex-row gap-x-4 mt-4">
-          <View className="flex flex-col gap-y-4 flex-1">
-            <View className="my-2">
+        <View
+          className={`flex ${type !== "PHONE" ? "flex-row" : "flex-col"} mt-4`}
+        >
+          <View className="flex flex-col">
+            <View>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value }, formState }) => (
@@ -53,13 +83,29 @@ export const UserForm = ({}: UserFormProps) => {
                     placeholder="Nume completo"
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    error={formState.errors.xTenantUserName?.message}
+                    errorMessage={formState.errors.fullName?.message}
                   />
                 )}
-                name="xTenantUserName"
+                name="fullName"
               />
             </View>
-            <View className="my-2">
+            <View>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value }, formState }) => (
+                  <Input
+                    value={value}
+                    placeholder="Telemóvel"
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    errorMessage={formState.errors.phone?.message}
+                    isPhone
+                  />
+                )}
+                name="phone"
+              />
+            </View>
+            <View>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value }, formState }) => (
@@ -68,49 +114,81 @@ export const UserForm = ({}: UserFormProps) => {
                     placeholder="E-mail"
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    error={formState.errors.xTenantKey?.message}
+                    errorMessage={formState.errors.email?.message}
                   />
                 )}
-                name="xTenantKey"
+                name="email"
               />
             </View>
           </View>
-          <View className="flex flex-col gap-y-4 flex-1">
-            <View className="my-2">
+          <View className="flex flex-col">
+            <View>
               <Controller
                 control={control}
-                render={({ field: { onChange, onBlur, value }, formState }) => (
-                  <Input
-                    value={value}
-                    placeholder="E-mail"
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    error={formState.errors.xTenantUserName?.message}
+                render={({ field: { onChange }, formState }) => (
+                  <Select
+                    placeholder="Permição de acesso"
+                    items={[
+                      {
+                        label: "Proprietário",
+                        value: "OWNER",
+                      },
+                      {
+                        label: "Gerente",
+                        value: "MANAGER",
+                      },
+                      {
+                        label: "Vendedor",
+                        value: "SELLER",
+                      },
+                    ]}
+                    onValueChange={onChange}
+                    errorMessage={formState.errors.access?.message}
                   />
                 )}
-                name="xTenantUserName"
+                name="access"
               />
             </View>
-            <View className="my-2">
+            <View>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value }, formState }) => (
                   <Input
                     value={value}
-                    placeholder="E-mail"
+                    placeholder="Nome de usuário"
                     onChangeText={onChange}
                     onBlur={onBlur}
-                    error={formState.errors.xTenantKey?.message}
+                    errorMessage={formState.errors.username?.message}
                   />
                 )}
-                name="xTenantKey"
+                name="username"
               />
             </View>
           </View>
         </View>
-        <View className="flex items-start mt-4">
+        <View className="flex flex-col">
           <View>
-            <Button className="px-6" onPress={handleSubmit(handleSaveTenant)}>
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value }, formState }) => (
+                <Input
+                  value={value}
+                  placeholder="Palavra passe"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  errorMessage={formState.errors.password?.message}
+                />
+              )}
+              name="password"
+            />
+          </View>
+        </View>
+        <View className="flex mt-4">
+          <View>
+            <Button
+              isLoading={loading}
+              onPress={handleSubmit(handleSaveTenant)}
+            >
               Salvar
             </Button>
           </View>
