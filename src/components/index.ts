@@ -11,3 +11,4 @@ export * from "./error-box";
 export * from "./accordion";
 export * from "./table";
 export * from "./user-form";
+export * from "./category-form"

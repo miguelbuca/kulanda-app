@@ -186,6 +186,17 @@ export const GET_CATEGORIES = gql`
   }
 `;
 
+export const GET_CATEGORY_BY_ID = gql`
+  query GetCategory($id: ID!) {
+    getCategory(id: $id) {
+      id
+      name
+      description
+      type
+    }
+  }
+`;
+
 export const GET_USERS = gql`
   query GetUsers {
     getUsers {

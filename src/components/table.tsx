@@ -67,6 +67,7 @@ export const Table = <T,>({
       filter,
       ...variables,
     },
+    fetchPolicy: "no-cache",
   });
 
   const { items, columns } = useMemo(() => {

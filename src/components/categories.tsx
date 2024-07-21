@@ -35,6 +35,7 @@ export const Categories = ({ onPress }: CategoriesProps) => {
         data={data}
         className={type !== "PHONE" ? "p-8 pt-0 pb-4" : "py-3 px-2"}
         horizontal
+        showsHorizontalScrollIndicator={false}
         ListHeaderComponent={() => (
           <TouchableOpacity
             onPress={() => {
@@ -74,7 +75,7 @@ export const Categories = ({ onPress }: CategoriesProps) => {
                   : "bg-white"
               } shadow-sm  ${
                 type !== "PHONE" ? "p-4" : "px-4 py-2.5"
-              } mx-2 rounded-lg`}
+              } mx-2 rounded-lg ${index+1 === data.length && 'mr-6'}`}
             >
               <Text
                 className={`font-semibold ${

@@ -72,6 +72,9 @@ export const UserForm = ({ userId }: UserFormProps) => {
             storeId: store.id,
           },
         });
+      else {
+        console.log("edit with: ", values);
+      }
     },
     [signUp, route, store, userId]
   );

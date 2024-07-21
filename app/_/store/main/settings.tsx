@@ -89,7 +89,17 @@ const Settings = () => {
       icon: <Ionicons name="git-pull-request-outline" size={24} />,
       document: GET_CATEGORIES,
       withAddEvent() {
-        console.log("add new categories!!");
+        route.push("_/store/category/create");
+      },
+      onEventHandler(type, value: UserType) {
+        switch (type) {
+          case "edit":
+            route.push("_/store/category/" + value.id);
+            break;
+
+          default:
+            break;
+        }
       },
     },
     {

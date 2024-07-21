@@ -56,3 +56,15 @@ export const CREATE_USER = gql`
     }
   }
 `;
+
+export const CREATE_CATEGORY = gql`
+  mutation CreateCategory(
+    $name: String!
+    $description: String
+    $type: CategoryEnumType!
+  ) {
+    createCategory(name: $name, description: $description, type: $type) {
+      id
+    }
+  }
+`;

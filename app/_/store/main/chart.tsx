@@ -34,12 +34,13 @@ const Chart = () => {
 
   const [report, setReport] = useState<ReportStoreType>();
 
-  const { refetch, loading } = useQuery(GET_STORE_REPORT, {
+  useQuery(GET_STORE_REPORT, {
     client: client,
     variables: {
       id: store.id,
       options,
     },
+    fetchPolicy: "no-cache",
     onCompleted: ({ getStoreReport }) => setReport(getStoreReport),
   });
 
