@@ -16,37 +16,36 @@ import { Select } from "./select";
 import { Input } from "./input";
 import { Button } from "./button";
 import { useMutation, useQuery } from "@apollo/client";
-import { CREATE_CATEGORY } from "../graphql/mutations";
+import { CREATE_CHARGE } from "../graphql/mutations";
 import { client } from "../api/client";
 import { router, useRouter } from "expo-router";
 import { useStore } from "../hooks/use-store";
-import { GET_CATEGORY_BY_ID } from "../graphql/queries";
+import { GET_CHARGE_BY_ID } from "../graphql/queries";
+import { Feather } from "@expo/vector-icons";
 
 const schema = z.object({
-  name: z
-    .string()
-    .min(4, "Categoryname is too short. Minimal length is 4 characters")
-    .max(29, "Categoryname is too long. Maximal length is 20 characters"),
-  description: z.string().optional(),
+  name: z.string(),
+  acronym: z.string(),
   type: z.string(),
+  percentage: z.number(),
 });
 
-export interface CategoryFormProps {
-  categoryId?: string;
+export interface ChargeFormProps {
+  chargeId?: string;
 }
 
-export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
+export const ChargeForm = ({ chargeId }: ChargeFormProps) => {
   const { store } = useStore();
   const { type } = useDevice();
-  const [category, setCategory] = useState<CategoryType>();
+  const [charge, setCharge] = useState<ChargeType>();
   const route = useRouter();
 
-  const [createCategory, { loading: createLoading }] = useMutation(
-    CREATE_CATEGORY,
+  const [createCharge, { loading: createLoading }] = useMutation(
+    CREATE_CHARGE,
     {
       client: client,
       onCompleted(data) {
-        if (data.createCategory?.id) route.back();
+        if (data.createCharge?.id) route.back();
       },
       onError(error) {
         console.log(error.message);
@@ -54,21 +53,21 @@ export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
     }
   );
 
-  useQuery(GET_CATEGORY_BY_ID, {
+  useQuery(GET_CHARGE_BY_ID, {
     client: client,
     variables: {
-      id: categoryId,
+      id: chargeId,
     },
     onCompleted(data) {
-      delete data.getCategory.__typename;
-      setCategory(data.getCategory);
+      delete data.getCharge.__typename;
+      setCharge(data.getCharge);
     },
   });
 
   const handleSaveTenant = useCallback(
     (values: z.infer<typeof schema>) => {
-      if (!categoryId)
-        createCategory({
+      if (!chargeId)
+        createCharge({
           variables: {
             ...values,
             storeId: store.id,
@@ -78,12 +77,12 @@ export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
         console.log("edit with: ", values);
       }
     },
-    [createCategory, route, store, categoryId]
+    [createCharge, route, store, chargeId]
   );
 
   const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
     values: {
-      ...category,
+      ...charge,
     } as any,
     resolver: zodResolver(schema),
   });
@@ -95,7 +94,7 @@ export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
     >
       <View className="flex flex-col  bg-white p-6 rounded-xl shadow-sm">
         <View
-          className={`flex ${type !== "PHONE" ? "flex-row" : "flex-col"} mt-4`}
+          className={`flex ${type !== "PHONE" ? "flex-row gap-x-4" : "flex-col"} mt-4`}
         >
           <View
             className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
@@ -118,25 +117,16 @@ export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
             <View>
               <Controller
                 control={control}
-                render={({ field: { onChange, value }, formState }) => (
-                  <Select
-                    value={value}
-                    placeholder="Tipo (nenhum)"
-                    items={[
-                      {
-                        label: "Produto",
-                        value: "PRODUCT",
-                      },
-                      {
-                        label: "Serviço",
-                        value: "SERVICE",
-                      },
-                    ]}
-                    onValueChange={onChange}
-                    errorMessage={formState.errors.type?.message}
+                render={({ field: { onChange, onBlur, value }, formState }) => (
+                  <Input
+                    value={value ?? ""}
+                    placeholder="Acrônimo"
+                    onChangeText={onChange}
+                    onBlur={onBlur}
+                    errorMessage={formState.errors.acronym?.message}
                   />
                 )}
-                name="type"
+                name="acronym"
               />
             </View>
           </View>
@@ -146,20 +136,46 @@ export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
             <View>
               <Controller
                 control={control}
-                render={({ field: { onChange, onBlur, value }, formState }) => (
-                  <Input
-                    value={value ?? ""}
-                    placeholder="Descrição"
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    errorMessage={formState.errors.description?.message}
-                    multiline
-                    style={{
-                      height: 200,
-                    }}
+                render={({ field: { onChange, value }, formState }) => (
+                  <Select
+                    value={value}
+                    placeholder="Tipo (nenhum)"
+                    items={[
+                      {
+                        label: "Imposto",
+                        value: "TAX",
+                      },
+                      {
+                        label: "Taxa",
+                        value: "FEE",
+                      },
+                      {
+                        label: "Desconto",
+                        value: "DISCOUNT",
+                      },
+                    ]}
+                    onValueChange={onChange}
+                    errorMessage={formState.errors.type?.message}
                   />
                 )}
-                name="description"
+                name="type"
+              />
+            </View>
+            <View>
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value }, formState }) => (
+                  <Input
+                    value={value?.toString()}
+                    placeholder="Percentagem"
+                    onChangeText={(value) => onChange(Number(value))}
+                    onBlur={onBlur}
+                    errorMessage={formState.errors.percentage?.message}
+                    keyboardType="numbers-and-punctuation"
+                    leftElement={<Feather name="percent" color={"gray"} />}
+                  />
+                )}
+                name="percentage"
               />
             </View>
           </View>

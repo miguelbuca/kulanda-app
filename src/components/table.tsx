@@ -92,16 +92,18 @@ export const Table = <T,>({
   return (
     <>
       <View className="flex flex-row items-center mt-3">
-        <View className="flex-1 flex-row">
+        <View className="flex-1 flex-row items-center gap-x-3">
           {withSearch && (
             <>
-              <Input
-                className={`h-10 mr-3 py-0.5 ${
-                  type === "PHONE" ? "flex-1" : "w-[310px]"
-                } `}
-                placeholder="Buscar por..."
-                onChangeText={setSearchValue}
-              />
+              <View className={` ${type === "PHONE" ? "flex-1" : "w-[310px]"}`}>
+                <Input
+                  className={`h-10 mr-3 py-0.5 ${
+                    type === "PHONE" ? "flex-1" : "w-[310px]"
+                  } `}
+                  placeholder="Buscar por..."
+                  onChangeText={setSearchValue}
+                />
+              </View>
               <TouchableOpacity onPress={() => setSearchFor(searchValue)}>
                 <View className="flex flex-row px-3 h-10 bg-black items-center justify-center rounded-lg">
                   <Ionicons name="search-outline" color={"#ffffff"} size={18} />

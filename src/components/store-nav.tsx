@@ -5,13 +5,14 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 import { theme } from "@/tailwind.config";
 
-import { useRouter } from "expo-router";
+import { useNavigation, useRouter } from "expo-router";
 import { useAuth } from "../hooks/use-auth";
+import { storage } from "../services";
 
 type Tab = "Profile" | "Main" | "Chart" | "Scan" | "Settings";
 
@@ -27,6 +28,13 @@ export const StoreNav = () => {
   const { user } = useAuth();
   const [currentTab, setCurrentTab] = useState<Tab>("Main");
   const route = useRouter();
+
+  const logOut = useCallback(() => {
+    storage.deleteValueFor("x-tenant-username");
+    storage.deleteValueFor("x-tenant-key");
+    storage.deleteValueFor("_kt");
+    route.replace("/");
+  }, [storage]);
 
   return (
     <SafeAreaView className="relative flex-1 border-r border-r-gray-200">
@@ -169,7 +177,7 @@ export const StoreNav = () => {
         </View>
         <View className="py-8">
           <View className="flex items-center gap-y-8">
-            <TouchableOpacity>
+            <TouchableOpacity onPress={logOut}>
               <View className="opacity-50">
                 <Ionicons name="log-out-outline" size={25} />
               </View>

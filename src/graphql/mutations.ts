@@ -57,6 +57,32 @@ export const CREATE_USER = gql`
   }
 `;
 
+export const CREATE_CLIENT = gql`
+  mutation CreateClient(
+    $fullName: String!
+    $nif: String
+    $phone: String!
+    $email: String
+    $address: String!
+    $type: ClientEnumType = INDIVIDUAL
+    $caeId: ID
+    $storeId: ID
+  ) {
+    createClient(
+      fullName: $fullName
+      nif: $nif
+      phone: $phone
+      email: $email
+      address: $address
+      type: $type
+      caeId: $caeId
+      storeId: $storeId
+    ) {
+      id
+    }
+  }
+`;
+
 export const CREATE_CATEGORY = gql`
   mutation CreateCategory(
     $name: String!
@@ -64,6 +90,26 @@ export const CREATE_CATEGORY = gql`
     $type: CategoryEnumType!
   ) {
     createCategory(name: $name, description: $description, type: $type) {
+      id
+    }
+  }
+`;
+
+export const CREATE_CHARGE = gql`
+  mutation CreateCharge(
+    $name: String!
+    $acronym: String!
+    $percentage: Float!
+    $type: ChargeEnumType!
+    $storeId: ID!
+  ) {
+    createCharge(
+      storeId: $storeId
+      name: $name
+      acronym: $acronym
+      percentage: $percentage
+      type: $type
+    ) {
       id
     }
   }

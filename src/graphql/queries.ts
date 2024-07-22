@@ -34,6 +34,10 @@ export const GET_COMPANY = gql`
       nif
       name
       logo
+      cae {
+        id
+        name
+      }
       stores {
         id
         designation
@@ -209,6 +213,34 @@ export const GET_USERS = gql`
   }
 `;
 
+export const GET_CLIENTS = gql`
+  query GetClients {
+    getClients {
+      id
+      fullName
+      nif
+      phone
+      email
+      address
+      type
+    }
+  }
+`;
+
+export const GET_CLIENT_BY_ID = gql`
+  query GetClient($id: ID!) {
+    getClient(id: $id) {
+      id
+      fullName
+      nif
+      phone
+      email
+      address
+      type
+    }
+  }
+`;
+
 export const GET_SALE_BY_STORE = gql`
   query GetSales($storeId: ID!) {
     getSales(storeId: $storeId) {
@@ -253,6 +285,37 @@ export const GET_SALE_BY_STORE = gql`
 export const GET_CHARGES_BY_STORE = gql`
   query GetChargesByStore($storeId: ID!) {
     getChargesByStore(storeId: $storeId) {
+      id
+      name
+      acronym
+      percentage
+      type
+    }
+  }
+`;
+
+export const GET_SECTORS = gql`
+  query GetSectors {
+    getSectors {
+      id
+      name
+    }
+  }
+`;
+
+export const GET_CAES = gql`
+  query GetCAEs {
+    getCAEs {
+      id
+      name
+      code
+    }
+  }
+`;
+
+export const GET_CHARGE_BY_ID = gql`
+  query GetCharge($id: ID!) {
+    getCharge(id: $id) {
       id
       name
       acronym

@@ -55,7 +55,7 @@ const Tenant = () => {
                   placeholder="Cliente"
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  error={formState.errors.xTenantUserName?.message}
+                  errorMessage={formState.errors.xTenantUserName?.message}
                 />
               )}
               name="xTenantUserName"
@@ -70,7 +70,7 @@ const Tenant = () => {
                   placeholder="Chave de accesso"
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  error={formState.errors.xTenantKey?.message}
+                  errorMessage={formState.errors.xTenantKey?.message}
                 />
               )}
               name="xTenantKey"

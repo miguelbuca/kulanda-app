@@ -1,20 +1,51 @@
+// Scalars
+type DateTime = string;
+
+// Enums
+enum AccessEnumType {
+  SELLER = "SELLER",
+  OWNER = "OWNER",
+  MANAGER = "MANAGER"
+}
+
+enum CategoryEnumType {
+  PRODUCT = "PRODUCT",
+  SERVICE = "SERVICE"
+}
+
+enum ChargeEnumType {
+  TAX = "TAX",
+  FEE = "FEE",
+  DISCOUNT = "DISCOUNT"
+}
+
+enum ClientEnumType {
+  INDIVIDUAL = "INDIVIDUAL",
+  LEGAL = "LEGAL"
+}
+
+enum PeriodReportStoreOptionsEnumType {
+  DAY = "DAY",
+  WEEK = "WEEK",
+  MONTH = "MONTH",
+  YEAR = "YEAR"
+}
+
+// Types
 interface UserType {
   id: string;
   fullName: string;
   username: string;
   phone: string;
   email: string;
-  access: keyof typeof AccessEnumType;
+  access: AccessEnumType;
   storeId?: string;
-  createdAt: Date;
-  updatedAt: Date;
-  companies: CompanyType[];
+  createdAt: DateTime;
+  updatedAt: DateTime;
 }
 
-enum AccessEnumType {
-  SELLER = "SELLER",
-  OWNER = "OWNER",
-  MANAGER = "MANAGER",
+interface AuthTokenType {
+  access_token: string;
 }
 
 interface StoreType {
@@ -22,8 +53,8 @@ interface StoreType {
   address: string;
   designation: string;
   phone: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: DateTime;
+  updatedAt: DateTime;
   products: ProductType[];
   sellers: UserType[];
   sales: SaleType[];
@@ -32,10 +63,10 @@ interface StoreType {
 interface OrderType {
   id: string;
   saleId: string;
-  productId?: string;
-  serviceId?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  productId: string;
+  serviceId: string;
+  createdAt: DateTime;
+  updatedAt: DateTime;
   products: ProductType[];
   services: ServiceType[];
 }
@@ -43,23 +74,25 @@ interface OrderType {
 interface SaleType {
   id: string;
   change?: number;
+  code: number;
   cash?: number;
   bankCard?: number;
   totalPrice?: number;
   sellerId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: DateTime;
+  updatedAt: DateTime;
   orders: OrderType[];
   seller?: UserType;
 }
 
 interface ReportStoreType {
   totalSales?: number;
-  sales: SaleType[];
+  sales?: SaleType[];
   totalSalesBalance?: number;
 }
 
 interface CompanyType {
+  tenantId: string;
   id: string;
   nif: string;
   name: string;
@@ -67,13 +100,9 @@ interface CompanyType {
   logo: string;
   caeId: string;
   stores: StoreType[];
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: DateTime;
+  updatedAt: DateTime;
   cae: CAEType;
-}
-
-interface AuthTokenType {
-  access_token: string;
 }
 
 interface CAEType {
@@ -81,8 +110,9 @@ interface CAEType {
   name: string;
   code: number;
   sectorId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+  sector: SectorType;
 }
 
 interface ProductType {
@@ -92,11 +122,11 @@ interface ProductType {
   image?: string;
   price: number;
   stock?: number;
-  expiresOn: Date;
+  expiresOn: DateTime;
   categoryId: string;
   storeId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: DateTime;
+  updatedAt: DateTime;
   category: CategoryType;
 }
 
@@ -104,14 +134,9 @@ interface CategoryType {
   id: string;
   name: string;
   description?: string;
-  type: keyof typeof CategoryEnumType;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-enum CategoryEnumType {
-  PRODUCT = "PRODUCT",
-  SERVICE = "SERVICE",
+  type: CategoryEnumType;
+  createdAt: DateTime;
+  updatedAt: DateTime;
 }
 
 interface ServiceType {
@@ -122,29 +147,55 @@ interface ServiceType {
   price: number;
   categoryId: string;
   storeId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: DateTime;
+  updatedAt: DateTime;
   category: CategoryType;
 }
 
 interface SectorType {
   id: string;
   name: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: DateTime;
+  updatedAt: DateTime;
 }
 
+interface TenantCredentialsType {
+  access_key: string;
+}
+
+interface ChargeType {
+  id: string;
+  name: string;
+  acronym: string;
+  percentage: number;
+  type: ChargeEnumType;
+  storeId?: string;
+  categoryId?: string;
+  serviceId?: string;
+  productId?: string;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
+
+interface ClientType {
+  id: string;
+  fullName: string;
+  nif?: string;
+  phone: string;
+  email?: string;
+  address: string;
+  type?: ClientEnumType;
+  caeId?: string;
+  storeId?: string;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+}
+
+// Inputs
 interface ReportStoreOptionsInput {
-  period?: keyof typeof PeriodReportStoreOptionsEnumType;
-  from?: Date;
+  period?: PeriodReportStoreOptionsEnumType;
+  from?: DateTime;
   sellerId?: string;
-}
-
-enum PeriodReportStoreOptionsEnumType {
-  DAY = "DAY",
-  WEEK = "WEEK",
-  MONTH = "MONTH",
-  YEAR = "YEAR",
 }
 
 interface FilterProductInput {
@@ -173,3 +224,12 @@ interface CreateOrderSaleInput {
   productId?: string;
   serviceId?: string;
 }
+
+interface CreateCompanyInput {
+  nif: string;
+  name: string;
+  address: string;
+  logo?: string;
+  caeId: string;
+}
+

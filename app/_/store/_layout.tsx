@@ -6,6 +6,7 @@ import { useDevice } from "@/src/hooks/use-device";
 
 const StoreLayout = () => {
   const { type } = useDevice();
+
   return (
     <View className="flex-1 flex-row bg-white">
       {type !== "PHONE" ? (

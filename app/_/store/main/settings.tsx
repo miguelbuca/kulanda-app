@@ -3,6 +3,7 @@ import { Accordion, AccordionProps, Table, TableProps } from "@/src/components";
 import {
   GET_CATEGORIES,
   GET_CHARGES_BY_STORE,
+  GET_CLIENTS,
   GET_PRODUCTS_BY_STORE,
   GET_SALE_BY_STORE,
   GET_SERVICES_BY_STORE,
@@ -28,7 +29,7 @@ const Settings = () => {
   const tables: TablePropsList[] = [
     {
       name: "Usuários",
-      icon: <Ionicons name="person-outline" size={24} />,
+      icon: <Feather name="user" size={24} />,
       document: GET_USERS,
       withAddEvent() {
         route.push("_/store/user/create");
@@ -77,11 +78,71 @@ const Settings = () => {
       },
     },
     {
-      name: "Tibutos",
+      name: "Clientes",
+      icon: <Feather name="users" size={24} />,
+      document: GET_CLIENTS,
+      withAddEvent() {
+        route.push("_/store/customer/create");
+      },
+      onEventHandler(type, value: UserType) {
+        switch (type) {
+          case "edit":
+            route.push("_/store/customer/" + value.id);
+            break;
+
+          default:
+            break;
+        }
+      },
+      renderCell: {
+        phone: (value) => {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                Linking.openURL(
+                  "tel:" + parsePhoneNumber(value).formatInternational()
+                )
+              }
+            >
+              <View className="flex flex-row">
+                <Feather name="external-link" size={10} />
+                <Text className="flex text-[10px] ml-1">
+                  {parsePhoneNumber(value).formatInternational()}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        },
+        email: (value) => {
+          return (
+            <TouchableOpacity
+              onPress={() => Linking.openURL("mailto:" + value)}
+            >
+              <View className="flex flex-row">
+                <Feather name="external-link" size={10} />
+                <Text className="flex text-[10px] ml-1">{value}</Text>
+              </View>
+            </TouchableOpacity>
+          );
+        },
+      },
+    },
+    {
+      name: "Cobranças",
       icon: <Feather name="percent" size={22} />,
       document: GET_CHARGES_BY_STORE,
       withAddEvent() {
-        console.log("add new taxs!!");
+        route.push("_/store/charges/create");
+      },
+      onEventHandler(type, value: UserType) {
+        switch (type) {
+          case "edit":
+            route.push("_/store/charges/" + value.id);
+            break;
+
+          default:
+            break;
+        }
       },
     },
     {

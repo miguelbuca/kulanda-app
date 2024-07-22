@@ -52,6 +52,20 @@ const StoreLayout = () => {
                   headerShown: true,
                 }}
               />
+              <Stack.Screen
+                name="profile"
+                options={{
+                  title: "Minha conta",
+                  headerShown: true,
+                }}
+              />
+              <Stack.Screen
+                name="chart"
+                options={{
+                  title: "Relatório de Vendas",
+                  headerShown: true,
+                }}
+              />
             </Stack>
           </View>
         </View>
