@@ -5,30 +5,30 @@ type DateTime = string;
 enum AccessEnumType {
   SELLER = "SELLER",
   OWNER = "OWNER",
-  MANAGER = "MANAGER"
+  MANAGER = "MANAGER",
 }
 
 enum CategoryEnumType {
   PRODUCT = "PRODUCT",
-  SERVICE = "SERVICE"
+  SERVICE = "SERVICE",
 }
 
 enum ChargeEnumType {
   TAX = "TAX",
   FEE = "FEE",
-  DISCOUNT = "DISCOUNT"
+  DISCOUNT = "DISCOUNT",
 }
 
 enum ClientEnumType {
   INDIVIDUAL = "INDIVIDUAL",
-  LEGAL = "LEGAL"
+  LEGAL = "LEGAL",
 }
 
 enum PeriodReportStoreOptionsEnumType {
   DAY = "DAY",
   WEEK = "WEEK",
   MONTH = "MONTH",
-  YEAR = "YEAR"
+  YEAR = "YEAR",
 }
 
 // Types
@@ -128,6 +128,7 @@ interface ProductType {
   createdAt: DateTime;
   updatedAt: DateTime;
   category: CategoryType;
+  charges: ChargeType[];
 }
 
 interface CategoryType {
@@ -135,6 +136,7 @@ interface CategoryType {
   name: string;
   description?: string;
   type: CategoryEnumType;
+  charges: ChargeType[];
   createdAt: DateTime;
   updatedAt: DateTime;
 }
@@ -150,6 +152,7 @@ interface ServiceType {
   createdAt: DateTime;
   updatedAt: DateTime;
   category: CategoryType;
+  charges: ChargeType[];
 }
 
 interface SectorType {
@@ -232,4 +235,3 @@ interface CreateCompanyInput {
   logo?: string;
   caeId: string;
 }
-

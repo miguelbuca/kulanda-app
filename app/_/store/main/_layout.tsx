@@ -1,8 +1,7 @@
-import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
+import { View, Text } from "react-native";
+import React from "react";
 import { Stack, Tabs } from "expo-router";
-import { Order, StoreNav } from "@/src/components";
-import { GET_STORE, GET_USER } from "@/src/graphql/queries";
+import { GET_STORE } from "@/src/graphql/queries";
 import { useQuery } from "@apollo/client";
 import { client } from "@/src/api/client";
 import { useStore } from "@/src/hooks/use-store";
@@ -12,12 +11,16 @@ import { theme } from "@/tailwind.config";
 import { Ionicons } from "@expo/vector-icons";
 import { useDevice } from "@/src/hooks/use-device";
 import { useAuth } from "@/src/hooks/use-auth";
-import { useOrder } from "@/src/hooks/use-order";
+
+import { Image } from "expo-image";
+import { useAssets } from "expo-asset";
 
 const StoreLayout = () => {
   const { user } = useAuth();
   const { store, setStore } = useStore();
   const { type } = useDevice();
+
+  const [assets] = useAssets([require("@/assets/images/icon.png")]);
 
   useQuery(GET_STORE, {
     client: client,
@@ -33,6 +36,7 @@ const StoreLayout = () => {
       console.log(error.message);
     },
   });
+
   return (
     <>
       {type !== "PHONE" ? (
@@ -85,10 +89,12 @@ const StoreLayout = () => {
               options={{
                 headerLeft: () => (
                   <View className="py-4 h-[60px] w-10">
-                    <View className="flex flex-1 items-center justify-center">
+                    <View className="flex flex-1 ml-4 items-center justify-center">
                       <Image
-                        className="w-8 h-8"
-                        source={require("@/assets/images/icon.png")}
+                        className="h-7 w-7"
+                        source={{
+                          uri: assets?.[0].uri,
+                        }}
                       />
                     </View>
                   </View>

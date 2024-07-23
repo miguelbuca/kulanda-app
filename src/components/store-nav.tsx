@@ -13,6 +13,7 @@ import { theme } from "@/tailwind.config";
 import { useNavigation, useRouter } from "expo-router";
 import { useAuth } from "../hooks/use-auth";
 import { storage } from "../services";
+import { useDevice } from "../hooks/use-device";
 
 type Tab = "Profile" | "Main" | "Chart" | "Scan" | "Settings";
 
@@ -28,6 +29,7 @@ export const StoreNav = () => {
   const { user } = useAuth();
   const [currentTab, setCurrentTab] = useState<Tab>("Main");
   const route = useRouter();
+  const { type } = useDevice()
 
   const logOut = useCallback(() => {
     storage.deleteValueFor("x-tenant-username");
@@ -39,7 +41,7 @@ export const StoreNav = () => {
   return (
     <SafeAreaView className="relative flex-1 border-r border-r-gray-200">
       <View className="flex-1 flex flex-col px-4 divide-y divide-gray-200">
-        <View className="py-4 h-[60px] w-10">
+        <View className={`py-4 ${type === 'TABLET' ? 'h-[60px]' : 'h-[60px]'} w-10`}>
           <View className="flex flex-1 items-center justify-center">
             <Image
               className="w-8 h-8"

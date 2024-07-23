@@ -77,8 +77,15 @@ export const useOrder = create<IOrder>((set) => ({
     );
   },
   addItem(item) {
-    set(({ items, qtd, totalTaxes }) => {
+    set(({ items, qtd, totalTaxes, setTotalTaxes }) => {
       const exists = items.filter(({ id }) => id === item.id).length > 0;
+
+      const totalCharges =
+        totalTaxes +
+        calCharges(item.price, item.charges) +
+        calCharges(item.price, item.category.charges);
+
+      setTotalTaxes?.(totalCharges);
 
       const nItems = !exists ? [...items, item] : items;
       const nQtd = item.id ? [...qtd, item.id] : qtd;
@@ -106,18 +113,28 @@ export const useOrder = create<IOrder>((set) => ({
         qtd: nQtd,
         list,
         subtotalPrice,
-        totalPrice: subtotalPrice + totalTaxes,
+        totalPrice: subtotalPrice + totalCharges,
       };
     });
   },
   removeItem(id) {
-    set(({ items, qtd }) => {
-      const exists = items.filter(({ id }) => id === id).length > 0;
+    set(({ items, qtd, totalTaxes, setTotalTaxes }) => {
+      const isItem = items.filter(({ id }) => id === id);
+      const exists = isItem.length > 0;
       const lastIndexOf = qtd.lastIndexOf(id);
       const nItems = !exists ? [...items] : items;
       const nQtd = qtd.filter((_, index) => index !== lastIndexOf);
 
       const list: OrderList[] = [];
+
+      const item = isItem?.[0];
+
+      const totalCharges =
+        totalTaxes -
+        (calCharges(item.price, item.charges) +
+          calCharges(item.price, item.category.charges));
+
+      setTotalTaxes?.(totalCharges);
 
       var subtotalPrice = 0;
 
@@ -141,13 +158,25 @@ export const useOrder = create<IOrder>((set) => ({
         qtd: nQtd,
         list,
         subtotalPrice,
+        totalPrice: subtotalPrice + totalCharges,
       };
     });
   },
   deleteItem(id) {
-    set(({ items, qtd }) => {
+    set(({ items, qtd, totalTaxes, setTotalTaxes }) => {
       const nItems = items.filter(({ id: _id }) => _id !== id);
       const nQtd = qtd.filter((_id) => _id !== id);
+
+      const _item = items.filter(({ id }) => id === id)?.[0];
+      const _qtd = qtd.filter((_id) => _id === id)?.length;
+
+      const totalCharges =
+        totalTaxes -
+        (calCharges(_item.price, _item.charges) +
+          calCharges(_item.price, _item.category.charges)) *
+          _qtd;
+
+      setTotalTaxes?.(totalCharges);
 
       const list: OrderList[] = [];
 
@@ -173,7 +202,22 @@ export const useOrder = create<IOrder>((set) => ({
         qtd: nQtd,
         list,
         subtotalPrice,
+        totalPrice: subtotalPrice + totalCharges,
       };
     });
   },
 }));
+
+function calCharges(value: number, charges: ChargeType[]) {
+  let totalCharges = 0;
+
+  charges.forEach((charge) => {
+    totalCharges += calcPercentage(value, charge.percentage);
+  });
+
+  return totalCharges;
+}
+
+function calcPercentage(value: number, percentage: number) {
+  return (value * percentage) / 100;
+}

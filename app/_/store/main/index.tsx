@@ -91,7 +91,11 @@ const Main = () => {
       className="flex flex-row flex-1 bg-gray-50"
     >
       <ScrollView>
-        <View className="flex flex-col flex-1 mt-8">
+        <View
+          className={`flex flex-col flex-1 ${
+            type === "TABLET" ? "mt-8" : "mt-2"
+          }`}
+        >
           <View className="flex flex-row items-center  p-8 px-10 pt-6">
             <View className="flex-1 flex flex-col">
               <Text className="text-3xl font-semibold">

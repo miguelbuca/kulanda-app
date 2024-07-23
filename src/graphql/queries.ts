@@ -79,10 +79,20 @@ export const GET_PRODUCTS_BY_STORE = gql`
       description
       price
       stock
+      charges {
+        id
+        name
+        percentage
+      }
       category {
         id
         name
         type
+        charges {
+          id
+          name
+          percentage
+        }
       }
     }
   }

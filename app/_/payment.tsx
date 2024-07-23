@@ -1,19 +1,16 @@
 import { View, Text, SafeAreaView } from "react-native";
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback } from "react";
 import { useOrder } from "@/src/hooks/use-order";
 import { formatMoney } from "@/src/utils/format-money";
 import { Button, Input } from "@/src/components";
 import { ScrollView } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 
-import * as Print from "expo-print";
-import { shareAsync } from "expo-sharing";
 
-import { Receipt } from "@/src/templates";
 import { useMutation } from "@apollo/client";
 import { CREATE_SALE } from "@/src/graphql/mutations";
 import { client } from "@/src/api/client";
-import { router, useRouter } from "expo-router";
+import { router } from "expo-router";
 
 const Payment = () => {
   const {
