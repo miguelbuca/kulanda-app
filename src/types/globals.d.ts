@@ -171,7 +171,7 @@ interface ChargeType {
   name: string;
   acronym: string;
   percentage: number;
-  type: ChargeEnumType;
+  type: keyof typeof ChargeEnumType;
   storeId?: string;
   categoryId?: string;
   serviceId?: string;

@@ -212,7 +212,9 @@ function calCharges(value: number, charges: ChargeType[]) {
   let totalCharges = 0;
 
   charges.forEach((charge) => {
-    totalCharges += calcPercentage(value, charge.percentage);
+    if (charge.type === "DISCOUNT") {
+      totalCharges -= calcPercentage(value, charge.percentage);
+    } else totalCharges += calcPercentage(value, charge.percentage);
   });
 
   return totalCharges;
