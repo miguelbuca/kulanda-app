@@ -8,9 +8,10 @@ import { useDevice } from "../hooks/use-device";
 
 export interface CategoriesProps {
   onPress(item?: CategoryType): void;
+  isFullView?: boolean;
 }
 
-export const Categories = ({ onPress }: CategoriesProps) => {
+export const Categories = ({ onPress, isFullView }: CategoriesProps) => {
   const [data, setData] = useState<CategoryType[]>([]);
   const [selectedCategoryName, setSelectedCategoryName] = useState("Todos");
   const { store } = useStore();
@@ -51,7 +52,7 @@ export const Categories = ({ onPress }: CategoriesProps) => {
               } mx-2 rounded-lg`}
             >
               <Text
-                className={`font-semibold ${
+                className={`font-semibold text-xs ${
                   selectedCategoryName === "Todos" ? "text-white" : "text-black"
                 }`}
               >
@@ -73,12 +74,12 @@ export const Categories = ({ onPress }: CategoriesProps) => {
                 item.name === selectedCategoryName
                   ? "bg-primary-500"
                   : "bg-white"
-              } shadow-sm  ${
+              } flex-row shadow-sm  ${
                 type !== "PHONE" ? "p-4" : "px-4 py-2.5"
-              } mx-2 rounded-lg ${index+1 === data.length && 'mr-6'}`}
+              } mx-2 rounded-lg ${index + 1 === data.length && "mr-6"}`}
             >
               <Text
-                className={`font-semibold ${
+                className={`font-semibold text-xs ${
                   item.name === selectedCategoryName
                     ? "text-white"
                     : "text-black"
@@ -86,6 +87,17 @@ export const Categories = ({ onPress }: CategoriesProps) => {
               >
                 {item.name}
               </Text>
+              {isFullView && (
+                <Text
+                  className={`font-thin ml-1 uppercase text-xs ${
+                    item.name === selectedCategoryName
+                      ? "text-white"
+                      : "text-black"
+                  }`}
+                >
+                  {item.type === "PRODUCT" ? "Produto" : "Serviço"}
+                </Text>
+              )}
             </View>
           </TouchableOpacity>
         )}

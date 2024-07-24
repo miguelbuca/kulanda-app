@@ -16,7 +16,14 @@ import React, {
   useState,
 } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { Button, Categories, Input, Order, Products } from "@/src/components";
+import {
+  Button,
+  Categories,
+  Input,
+  Order,
+  Products,
+  Services,
+} from "@/src/components";
 import { SplashScreen, useNavigation } from "expo-router";
 import { useAuth } from "@/src/hooks/use-auth";
 import { useStore } from "@/src/hooks/use-store";
@@ -44,6 +51,9 @@ const Main = () => {
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
+  const [haveProduct, setHaveProduct] = useState<boolean>();
+  const [haveService, setHaveService] = useState<boolean>();
+
   const snapPoints = useMemo(() => ["1%", "90%"], []);
 
   const renderBackdrop = useCallback(
@@ -57,6 +67,10 @@ const Main = () => {
       name,
     };
   }, [selectedCategory, name]);
+
+  const isFullView = useMemo(() => {
+    return haveProduct && haveService;
+  }, [haveProduct, haveService]);
 
   useEffect(() => {
     if (type === "PHONE") {
@@ -113,7 +127,7 @@ const Main = () => {
             </View>
           </View>
           <View className="flex-1 flex flex-col pt-0">
-            <Categories onPress={setSelectedCategory} />
+            <Categories isFullView={isFullView} onPress={setSelectedCategory} />
             <View className="flex flex-row px-10 items-center">
               <View className="flex-1">
                 <Input
@@ -132,7 +146,36 @@ const Main = () => {
                 </Button>
               </View>
             </View>
-            <Products filter={filter} />
+            <View className="flex flex-col mb-4">
+              {isFullView && (
+                <View className="relative text-center justify-center flex flex-row m-10 mb-4 border-b border-gray-200">
+                  <Text className="text-xs font-light bg-gray-50 -mb-4 p-2 px-8 uppercase text-gray-300 mr-3">
+                    Produtos
+                  </Text>
+                </View>
+              )}
+              <Products
+                onLengthChange={(value) =>
+                  haveProduct === undefined && setHaveProduct(value)
+                }
+                filter={filter}
+              />
+            </View>
+            <View className="flex flex-col mb-4">
+              {isFullView && (
+                <View className="relative text-center justify-center flex flex-row m-10 mb-4 border-b border-gray-200">
+                  <Text className="text-xs font-light bg-gray-50 -mb-4 p-2 px-8 uppercase text-gray-300 mr-3">
+                    Serviços
+                  </Text>
+                </View>
+              )}
+              <Services
+                onLengthChange={(value) =>
+                  haveService === undefined && setHaveService(value)
+                }
+                filter={filter}
+              />
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -166,8 +209,37 @@ const Main = () => {
               </Button>
             </View>
           </View>
-          <Categories onPress={setSelectedCategory} />
-          <Products filter={filter} />
+          <Categories isFullView={isFullView} onPress={setSelectedCategory} />
+          <View className="flex flex-col mb-4">
+            {isFullView && (
+              <View className="relative text-center justify-center flex flex-row m-4 mb-2 border-b border-gray-200">
+                <Text className="text-xs font-light bg-gray-50 -mb-4 p-2 px-8 uppercase text-gray-300 mr-3">
+                  Produtos
+                </Text>
+              </View>
+            )}
+            <Products
+              onLengthChange={(value) =>
+                haveProduct === undefined && setHaveProduct(value)
+              }
+              filter={filter}
+            />
+          </View>
+          <View className="flex flex-col mb-4">
+            {isFullView && (
+              <View className="relative text-center justify-center flex flex-row m-4 mb-2 border-b border-gray-200">
+                <Text className="text-xs font-light bg-gray-50 -mb-4 p-2 px-8 uppercase text-gray-300 mr-3">
+                  Serviços
+                </Text>
+              </View>
+            )}
+            <Services
+              onLengthChange={(value) =>
+                haveService === undefined && setHaveService(value)
+              }
+              filter={filter}
+            />
+          </View>
         </View>
       </ScrollView>
       <BottomSheetModal

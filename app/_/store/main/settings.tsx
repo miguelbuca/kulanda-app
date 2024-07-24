@@ -171,7 +171,7 @@ const Settings = () => {
         console.log("add new products!!");
       },
       withSearch: "name",
-      excludColumns: ["category"],
+      excludColumns: ["category", "charges"],
       renderCell: {
         image: (value) => {
           return (
@@ -208,6 +208,7 @@ const Settings = () => {
         console.log("add new service!!");
       },
       withSearch: "name",
+      excludColumns: ["category", "charges"],
       renderCell: {
         image: (value) => {
           return (

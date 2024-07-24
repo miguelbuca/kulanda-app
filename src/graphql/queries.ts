@@ -106,10 +106,20 @@ export const GET_SERVICES_BY_STORE = gql`
       image
       description
       price
+      charges {
+        id
+        name
+        percentage
+      }
       category {
         id
         name
         type
+        charges {
+          id
+          name
+          percentage
+        }
       }
     }
   }

@@ -1,33 +1,33 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { GET_PRODUCTS_BY_STORE } from "../graphql/queries";
+import { GET_SERVICES_BY_STORE } from "../graphql/queries";
 import { useStore } from "../hooks/use-store";
 import { client } from "../api/client";
 import { formatMoney } from "../utils/format-money";
 import { useOrder } from "../hooks/use-order";
 import { useDevice } from "../hooks/use-device";
 
-export interface ProductsProps {
-  filter?: FilterProductInput;
+export interface ServicesProps {
+  filter?: FilterServiceInput;
   onLengthChange?: (value: boolean) => void;
 }
 
-export const Products = ({ filter, onLengthChange }: ProductsProps) => {
+export const Services = ({ filter,onLengthChange }: ServicesProps) => {
   const [data, setData] = useState<ProductType[]>([]);
   const { store } = useStore();
   const { addItem, qtd } = useOrder();
   const { type } = useDevice();
 
-  useQuery(GET_PRODUCTS_BY_STORE, {
+  useQuery(GET_SERVICES_BY_STORE, {
     client: client,
     variables: {
       storeId: store.id,
       filter,
     },
-    onCompleted: ({ getProducts }) => {
-      onLengthChange?.(getProducts.length > 0);
-      setData(getProducts);
+    onCompleted: ({ getServices }) => {
+      onLengthChange?.(getServices.length>0);
+      setData(getServices);
     },
     onError: (error) => {
       console.log(error.message);

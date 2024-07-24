@@ -326,7 +326,7 @@ const Chart = () => {
                   <View
                     key={index}
                     className={`flex flex-row items-center gap-x-2 py-2 ${
-                      index === 1 && "border-t border-t-gray-300"
+                      index === 1 && "border-t border-t-gray-100"
                     }`}
                   >
                     <View>
@@ -371,7 +371,7 @@ const Chart = () => {
                   <View
                     key={index}
                     className={`flex flex-row items-center gap-x-2 py-2 ${
-                      index === 1 && "border-t border-t-gray-300"
+                      index === 1 && "border-t border-t-gray-100"
                     }`}
                   >
                     <View>
