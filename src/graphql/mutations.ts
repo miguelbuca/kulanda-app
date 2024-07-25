@@ -114,3 +114,55 @@ export const CREATE_CHARGE = gql`
     }
   }
 `;
+
+export const CREATE_PRODUCT = gql`
+  mutation CreateProduct(
+    $name: String!
+    $description: String
+    $image: String
+    $price: Float!
+    $stock: Int
+    $expiresOn: DateTime!
+    $categoryId: ID!
+    $charges: [ID!] = []
+    $storeId: ID!
+  ) {
+    createProduct(
+      name: $name
+      description: $description
+      image: $image
+      price: $price
+      stock: $stock
+      expiresOn: $expiresOn
+      categoryId: $categoryId
+      charges: $charges
+      storeId: $storeId
+    ) {
+      id
+    }
+  }
+`;
+
+export const CREATE_SERVICE = gql`
+  mutation CreateService(
+    $name: String!
+    $description: String
+    $image: String
+    $price: Float!
+    $categoryId: ID!
+    $charges: [ID!] = []
+    $storeId: ID!
+  ) {
+    createService(
+      name: $name
+      description: $description
+      image: $image
+      price: $price
+      categoryId: $categoryId
+      charges: $charges
+      storeId: $storeId
+    ) {
+      id
+    }
+  }
+`;

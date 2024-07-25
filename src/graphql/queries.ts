@@ -344,3 +344,61 @@ export const GET_CHARGE_BY_ID = gql`
     }
   }
 `;
+
+export const GET_PRODUCT_BY_ID = gql`
+  query GetProduct($id: ID!) {
+    getProduct(id: $id) {
+      id
+      name
+      image
+      description
+      price
+      stock
+      categoryId
+      expiresOn
+      charges {
+        id
+        name
+        percentage
+      }
+      category {
+        id
+        name
+        type
+        charges {
+          id
+          name
+          percentage
+        }
+      }
+    }
+  }
+`;
+
+export const GET_SERVICE_BY_ID = gql`
+  query GetService($id: ID!) {
+    getService(id: $id) {
+      id
+      name
+      image
+      description
+      price
+      categoryId
+      charges {
+        id
+        name
+        percentage
+      }
+      category {
+        id
+        name
+        type
+        charges {
+          id
+          name
+          percentage
+        }
+      }
+    }
+  }
+`;

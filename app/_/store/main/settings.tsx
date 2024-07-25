@@ -168,7 +168,17 @@ const Settings = () => {
       icon: <Ionicons name="fast-food-outline" size={24} />,
       document: GET_PRODUCTS_BY_STORE,
       withAddEvent() {
-        console.log("add new products!!");
+        route.push("_/store/product/create");
+      },
+      onEventHandler(type, value: UserType) {
+        switch (type) {
+          case "edit":
+            route.push("_/store/product/" + value.id);
+            break;
+
+          default:
+            break;
+        }
       },
       withSearch: "name",
       excludColumns: ["category", "charges"],
@@ -205,7 +215,17 @@ const Settings = () => {
       icon: <Ionicons name="construct-outline" size={24} />,
       document: GET_SERVICES_BY_STORE,
       withAddEvent() {
-        console.log("add new service!!");
+        route.push("_/store/service/create");
+      },
+      onEventHandler(type, value: UserType) {
+        switch (type) {
+          case "edit":
+            route.push("_/store/service/" + value.id);
+            break;
+
+          default:
+            break;
+        }
       },
       withSearch: "name",
       excludColumns: ["category", "charges"],

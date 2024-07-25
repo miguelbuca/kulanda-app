@@ -14,3 +14,6 @@ export * from "./category-form"
 export * from './client-form'
 export * from './charge-form'
 export * from './services'
+export * from './product-form'
+export * from './avatar-dinamic'
+export * from './service-form'

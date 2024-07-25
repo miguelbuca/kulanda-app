@@ -121,12 +121,16 @@ export const InputDataPicker = ({
         {leftElement ? <View className="mr-2">{leftElement}</View> : null}
         {label || value ? (
           <View className="flex-1 mr-2">
-            <Text className="text-[#aeaeae] text-[16px]">
+            <Text
+              className={`${
+                value ? "text-black" : "text-[#aeaeae]"
+              } text-[16px]`}
+            >
               {value?.toLocaleDateString() || label}
             </Text>
           </View>
         ) : null}
-        <RNDateTimePicker
+       { <RNDateTimePicker
           style={{
             display: "flex",
             justifyContent: "center",
@@ -139,7 +143,7 @@ export const InputDataPicker = ({
           mode="date"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
-        />
+        />}
       </Pressable>
       {errorMessage && (
         <Text className="text-red-600 text-[10px] my-2">{errorMessage}</Text>

@@ -141,34 +141,36 @@ export const UserForm = ({ userId }: UserFormProps) => {
             </View>
           </View>
           <View className="flex flex-col">
-            <View>
-              <Controller
-                control={control}
-                render={({ field: { onChange, value }, formState }) => (
-                  <Select
-                    value={value}
-                    placeholder="Permição de acesso"
-                    items={[
-                      {
-                        label: "Proprietário",
-                        value: "OWNER",
-                      },
-                      {
-                        label: "Gerente",
-                        value: "MANAGER",
-                      },
-                      {
-                        label: "Vendedor",
-                        value: "SELLER",
-                      },
-                    ]}
-                    onValueChange={onChange}
-                    errorMessage={formState.errors.access?.message}
-                  />
-                )}
-                name="access"
-              />
-            </View>
+            {["OWNER"].includes(user?.access ?? "") && (
+              <View>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, value }, formState }) => (
+                    <Select
+                      value={value}
+                      placeholder="Permição de acesso"
+                      items={[
+                        {
+                          label: "Proprietário",
+                          value: "OWNER",
+                        },
+                        {
+                          label: "Gerente",
+                          value: "MANAGER",
+                        },
+                        {
+                          label: "Vendedor",
+                          value: "SELLER",
+                        },
+                      ]}
+                      onValueChange={onChange}
+                      errorMessage={formState.errors.access?.message}
+                    />
+                  )}
+                  name="access"
+                />
+              </View>
+            )}
             <View>
               <Controller
                 control={control}
