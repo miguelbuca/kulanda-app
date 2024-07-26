@@ -182,7 +182,7 @@ export const ServiceForm = ({ serviceId }: ServiceFormProps) => {
                         (item: any) => item?.value == value
                       )?.[0]?.value
                     }
-                    placeholder="Categorias"
+                     placeholder="Categorias(nenhum)"
                     items={categoriesSelectData}
                     onValueChange={onChange}
                     errorMessage={formState.errors.categoryId?.message}
@@ -219,6 +219,7 @@ export const ServiceForm = ({ serviceId }: ServiceFormProps) => {
             <Button
               isLoading={createLoading}
               onPress={handleSubmit(handleSaveTenant)}
+              className={type !== "PHONE" ? `w-[100px] mt-12` : ``}
             >
               Salvar
             </Button>

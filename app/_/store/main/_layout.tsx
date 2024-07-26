@@ -14,11 +14,13 @@ import { useAuth } from "@/src/hooks/use-auth";
 
 import { Image } from "expo-image";
 import { useAssets } from "expo-asset";
+import { useNav } from "@/src/hooks/use-nav";
 
 const StoreLayout = () => {
   const { user } = useAuth();
   const { store, setStore } = useStore();
   const { type } = useDevice();
+  const { setActiveTab } = useNav();
 
   const [assets] = useAssets([require("@/assets/images/icon.png")]);
 
@@ -48,6 +50,15 @@ const StoreLayout = () => {
                 headerShown: false,
                 animation: "fade_from_bottom",
               }}
+              screenListeners={({ route }) => ({
+                state: () => {
+                  setActiveTab(
+                    route?.name !== "index"
+                      ? (route?.name?.toUpperCase() as any)
+                      : "MAIN"
+                  );
+                },
+              })}
             >
               <Stack.Screen
                 name="settings"

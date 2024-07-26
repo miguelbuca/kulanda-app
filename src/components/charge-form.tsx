@@ -186,6 +186,7 @@ export const ChargeForm = ({ chargeId }: ChargeFormProps) => {
             <Button
               isLoading={createLoading}
               onPress={handleSubmit(handleSaveTenant)}
+              className={type !== "PHONE" ? `w-[100px] mt-12` : ``}
             >
               Salvar
             </Button>

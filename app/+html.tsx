@@ -1,4 +1,5 @@
 import { ScrollViewStyleReset } from "expo-router/html";
+import { Platform } from "react-native";
 
 // This file is web-only and used to configure the root HTML for every
 // web page during static rendering.
@@ -14,8 +15,6 @@ export default function Root({ children }: { children: React.ReactNode }) {
           name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no"
         />
-        <link rel="stylesheet" href="style.css" />
-        <title>ola</title>
         {/* 
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native. 
           However, body scrolling is often nice to have for mobile web. If you want to enable it, remove this line.

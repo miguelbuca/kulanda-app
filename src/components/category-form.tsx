@@ -95,7 +95,9 @@ export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
     >
       <View className="flex flex-col  bg-white p-6 rounded-xl shadow-sm">
         <View
-          className={`flex ${type !== "PHONE" ? "flex-row" : "flex-col"} mt-4`}
+          className={`flex ${
+            type !== "PHONE" ? "flex-row gap-x-4" : "flex-col"
+          } mt-4`}
         >
           <View
             className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
@@ -155,7 +157,8 @@ export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
                     errorMessage={formState.errors.description?.message}
                     multiline
                     style={{
-                      height: 200,
+                      height: 110,
+                      paddingVertical: 19
                     }}
                   />
                 )}
@@ -170,6 +173,7 @@ export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
             <Button
               isLoading={createLoading}
               onPress={handleSubmit(handleSaveTenant)}
+              className={type !== "PHONE" ? `w-[100px] mt-12` : ``}
             >
               Salvar
             </Button>

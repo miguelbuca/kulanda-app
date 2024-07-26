@@ -106,7 +106,9 @@ export const ClientForm = ({ clientId }: ClientFormProps) => {
     <>
       <View className="flex flex-col  bg-white p-6 rounded-xl shadow-sm">
         <View
-          className={`flex ${type !== "PHONE" ? "flex-row gap-x-4" : "flex-col"} mt-4`}
+          className={`flex ${
+            type !== "PHONE" ? "flex-row gap-x-4" : "flex-col"
+          } mt-4`}
         >
           <View
             className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
@@ -245,11 +247,12 @@ export const ClientForm = ({ clientId }: ClientFormProps) => {
           ) : null}
         </View>
 
-        <View className="flex mt-4">
-          <View>
+        <View className={`flex flex-row items-center`}>
+          <View className="mt-14">
             <Button
               isLoading={createLoading}
               onPress={handleSubmit(handleSaveTenant)}
+              className={type !== "PHONE" ? `w-[100px] mt-12` : ``}
             >
               Salvar
             </Button>

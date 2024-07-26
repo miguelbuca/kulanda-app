@@ -203,7 +203,7 @@ export const ProductForm = ({ productId }: ProductFormProps) => {
                         (item: any) => item?.value == value
                       )?.[0]?.value
                     }
-                    placeholder="Categorias"
+                    placeholder="Categorias(nenhum)"
                     items={categoriesSelectData}
                     onValueChange={onChange}
                     errorMessage={formState.errors.categoryId?.message}
@@ -259,6 +259,7 @@ export const ProductForm = ({ productId }: ProductFormProps) => {
             <Button
               isLoading={createLoading}
               onPress={handleSubmit(handleSaveTenant)}
+              className={type !== "PHONE" ? `w-[100px] mt-12` : ``}
             >
               Salvar
             </Button>

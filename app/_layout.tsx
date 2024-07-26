@@ -6,7 +6,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
 import { NativeWindStyleSheet } from "nativewind";
 import { useEffect } from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 
@@ -47,7 +47,7 @@ function RootLayoutNav() {
         <Stack
           screenOptions={{
             headerShown: false,
-            animation: 'none'
+            animation: "none",
           }}
         >
           <Stack.Screen

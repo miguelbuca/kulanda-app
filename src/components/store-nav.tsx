@@ -14,8 +14,9 @@ import { useNavigation, useRouter } from "expo-router";
 import { useAuth } from "../hooks/use-auth";
 import { storage } from "../services";
 import { useDevice } from "../hooks/use-device";
+import { useNav } from "../hooks/use-nav";
 
-type Tab = "Profile" | "Main" | "Chart" | "Scan" | "Settings";
+export type Tab = "PROFILE" | "MAIN" | "CHART" | "SCAN" | "SETTINGS";
 
 export interface IStoreNavStore {
   currentTab: Tab;
@@ -27,9 +28,9 @@ const tintColor = theme?.extend.colors.primary[500];
 
 export const StoreNav = () => {
   const { user } = useAuth();
-  const [currentTab, setCurrentTab] = useState<Tab>("Main");
+  const { ativeTab: currentTab, setActiveTab: setCurrentTab } = useNav();
   const route = useRouter();
-  const { type } = useDevice()
+  const { type } = useDevice();
 
   const logOut = useCallback(() => {
     storage.deleteValueFor("x-tenant-username");
@@ -41,7 +42,9 @@ export const StoreNav = () => {
   return (
     <SafeAreaView className="relative flex-1 border-r border-r-gray-200">
       <View className="flex-1 flex flex-col px-4 divide-y divide-gray-200">
-        <View className={`py-4 ${type === 'TABLET' ? 'h-[60px]' : 'h-[60px]'} w-10`}>
+        <View
+          className={`py-4 ${type === "TABLET" ? "h-[60px]" : "h-[60px]"} w-10`}
+        >
           <View className="flex flex-1 items-center justify-center">
             <Image
               className="w-8 h-8"
@@ -53,19 +56,19 @@ export const StoreNav = () => {
           <View className="flex-1 flex-col items-center gap-y-8">
             <TouchableOpacity
               onPress={() => {
-                setCurrentTab("Main");
+                setCurrentTab("MAIN");
                 route.push("/_/store/main");
               }}
             >
               <View>
                 <Ionicons
                   name={
-                    currentTab === "Main" ? "storefront" : "storefront-outline"
+                    currentTab === "MAIN" ? "storefront" : "storefront-outline"
                   }
                   size={25}
-                  color={currentTab === "Main" ? tintColor : "rgba(0,0,0,0.5)"}
+                  color={currentTab === "MAIN" ? tintColor : "rgba(0,0,0,0.5)"}
                 />
-                {currentTab === "Main" && (
+                {currentTab === "MAIN" && (
                   <View
                     style={{
                       backgroundColor: tintColor,
@@ -77,17 +80,17 @@ export const StoreNav = () => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                setCurrentTab("Scan");
+                setCurrentTab("SCAN");
                 route.push("/_/store/main/scan");
               }}
             >
               <View>
                 <Ionicons
-                  name={currentTab === "Scan" ? "qr-code" : "qr-code-outline"}
+                  name={currentTab === "SCAN" ? "qr-code" : "qr-code-outline"}
                   size={25}
-                  color={currentTab === "Scan" ? tintColor : "rgba(0,0,0,0.5)"}
+                  color={currentTab === "SCAN" ? tintColor : "rgba(0,0,0,0.5)"}
                 />
-                {currentTab === "Scan" && (
+                {currentTab === "SCAN" && (
                   <View
                     style={{
                       backgroundColor: tintColor,
@@ -99,19 +102,19 @@ export const StoreNav = () => {
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
-                setCurrentTab("Chart");
+                setCurrentTab("CHART");
                 route.push("/_/store/main/chart");
               }}
             >
               <View>
                 <Ionicons
                   name={
-                    currentTab === "Chart" ? "pie-chart" : "pie-chart-outline"
+                    currentTab === "CHART" ? "pie-chart" : "pie-chart-outline"
                   }
                   size={25}
-                  color={currentTab === "Chart" ? tintColor : "rgba(0,0,0,0.5)"}
+                  color={currentTab === "CHART" ? tintColor : "rgba(0,0,0,0.5)"}
                 />
-                {currentTab === "Chart" && (
+                {currentTab === "CHART" && (
                   <View
                     style={{
                       backgroundColor: tintColor,
@@ -124,23 +127,23 @@ export const StoreNav = () => {
             {["OWNER", "MANAGER"].includes(user.access) && (
               <TouchableOpacity
                 onPress={() => {
-                  setCurrentTab("Settings");
+                  setCurrentTab("SETTINGS");
                   route.push("/_/store/main/settings");
                 }}
               >
                 <View>
                   <Ionicons
                     name={
-                      currentTab === "Settings"
+                      currentTab === "SETTINGS"
                         ? "settings"
                         : "settings-outline"
                     }
                     size={25}
                     color={
-                      currentTab === "Settings" ? tintColor : "rgba(0,0,0,0.5)"
+                      currentTab === "SETTINGS" ? tintColor : "rgba(0,0,0,0.5)"
                     }
                   />
-                  {currentTab === "Settings" && (
+                  {currentTab === "SETTINGS" && (
                     <View
                       style={{
                         backgroundColor: tintColor,
@@ -153,19 +156,19 @@ export const StoreNav = () => {
             )}
             <TouchableOpacity
               onPress={() => {
-                setCurrentTab("Profile");
+                setCurrentTab("PROFILE");
                 route.push("/_/store/main/profile");
               }}
             >
               <View>
                 <Ionicons
-                  name={currentTab === "Profile" ? "person" : "person-outline"}
+                  name={currentTab === "PROFILE" ? "person" : "person-outline"}
                   size={25}
                   color={
-                    currentTab === "Profile" ? tintColor : "rgba(0,0,0,0.5)"
+                    currentTab === "PROFILE" ? tintColor : "rgba(0,0,0,0.5)"
                   }
                 />
-                {currentTab === "Profile" && (
+                {currentTab === "PROFILE" && (
                   <View
                     style={{
                       backgroundColor: tintColor,

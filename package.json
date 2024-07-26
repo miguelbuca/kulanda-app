@@ -8,6 +8,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "web:deploy": "netlify deploy --dir dist",
+    "build:web": "expo export -p web && npx workbox-cli generateSW workbox-config.js",
     "test": "jest --watchAll"
   },
   "jest": {

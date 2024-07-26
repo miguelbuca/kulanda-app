@@ -224,6 +224,7 @@ export const UserForm = ({ userId }: UserFormProps) => {
             <Button
               isLoading={createLoading}
               onPress={handleSubmit(handleSaveTenant)}
+              className={type !== "PHONE" ? `w-[100px] mt-12` : ``}
             >
               Salvar
             </Button>
