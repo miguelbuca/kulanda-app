@@ -39,7 +39,7 @@ export const UserForm = ({ userId }: UserFormProps) => {
   const { store } = useStore();
   const { type } = useDevice();
   const [user, setUser] = useState<UserType>();
-  const [passwordChange, setPasswordChange] = useState(!userId);
+  const [passwordChange, setPasswordChange] = useState(!!userId);
   const route = useRouter();
 
   const [signUp, { loading: createLoading }] = useMutation(CREATE_USER, {
@@ -90,9 +90,13 @@ export const UserForm = ({ userId }: UserFormProps) => {
     <>
       <View className="flex flex-col  bg-white p-6 rounded-xl shadow-sm">
         <View
-          className={`flex ${type !== "PHONE" ? "flex-row" : "flex-col"} mt-4`}
+          className={`flex ${
+            type !== "PHONE" ? "flex-row gap-x-4" : "flex-col"
+          } mt-4`}
         >
-          <View className="flex flex-col">
+          <View
+            className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
+          >
             <View>
               <Controller
                 control={control}
@@ -124,53 +128,41 @@ export const UserForm = ({ userId }: UserFormProps) => {
                 name="phone"
               />
             </View>
-            <View>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value }, formState }) => (
-                  <Input
-                    value={value}
-                    placeholder="E-mail"
-                    onChangeText={onChange}
-                    onBlur={onBlur}
-                    errorMessage={formState.errors.email?.message}
-                  />
-                )}
-                name="email"
-              />
-            </View>
           </View>
-          <View className="flex flex-col">
-            {["OWNER"].includes(user?.access ?? "") && (
-              <View>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, value }, formState }) => (
-                    <Select
-                      value={value}
-                      placeholder="Permição de acesso"
-                      items={[
-                        {
-                          label: "Proprietário",
-                          value: "OWNER",
-                        },
-                        {
-                          label: "Gerente",
-                          value: "MANAGER",
-                        },
-                        {
-                          label: "Vendedor",
-                          value: "SELLER",
-                        },
-                      ]}
-                      onValueChange={onChange}
-                      errorMessage={formState.errors.access?.message}
-                    />
-                  )}
-                  name="access"
-                />
-              </View>
-            )}
+          <View
+            className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
+          >
+            {(["OWNER"].includes(user?.access ?? "") && userId) ||
+              (!userId && (
+                <View>
+                  <Controller
+                    control={control}
+                    render={({ field: { onChange, value }, formState }) => (
+                      <Select
+                        value={value}
+                        placeholder="Permição de acesso"
+                        items={[
+                          {
+                            label: "Proprietário",
+                            value: "OWNER",
+                          },
+                          {
+                            label: "Gerente",
+                            value: "MANAGER",
+                          },
+                          {
+                            label: "Vendedor",
+                            value: "SELLER",
+                          },
+                        ]}
+                        onValueChange={onChange}
+                        errorMessage={formState.errors.access?.message}
+                      />
+                    )}
+                    name="access"
+                  />
+                </View>
+              ))}
             <View>
               <Controller
                 control={control}
@@ -188,10 +180,28 @@ export const UserForm = ({ userId }: UserFormProps) => {
             </View>
           </View>
         </View>
-
-        <View className="flex flex-col">
+        <View
+          className={`flex  ${
+            type !== "PHONE" ? "flex-1 flex-row gap-x-4" : " flex-col"
+          } `}
+        >
+          <View className="flex-1">
+            <Controller
+              control={control}
+              render={({ field: { onChange, onBlur, value }, formState }) => (
+                <Input
+                  value={value}
+                  placeholder="E-mail"
+                  onChangeText={onChange}
+                  onBlur={onBlur}
+                  errorMessage={formState.errors.email?.message}
+                />
+              )}
+              name="email"
+            />
+          </View>
           {passwordChange ? (
-            <View>
+            <View className="flex-1">
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value }, formState }) => (
@@ -208,6 +218,9 @@ export const UserForm = ({ userId }: UserFormProps) => {
             </View>
           ) : (
             <TouchableOpacity
+              style={{
+                flex: 1,
+              }}
               onPress={() => setPasswordChange((prev) => !prev)}
             >
               <View className="flex items-center justify-center py-4 mt-4">
