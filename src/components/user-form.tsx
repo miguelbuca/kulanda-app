@@ -132,37 +132,37 @@ export const UserForm = ({ userId }: UserFormProps) => {
           <View
             className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
           >
-            {(["OWNER"].includes(user?.access ?? "") && userId) ||
-              (!userId && (
-                <View>
-                  <Controller
-                    control={control}
-                    render={({ field: { onChange, value }, formState }) => (
-                      <Select
-                        value={value}
-                        placeholder="Permição de acesso"
-                        items={[
-                          {
-                            label: "Proprietário",
-                            value: "OWNER",
-                          },
-                          {
-                            label: "Gerente",
-                            value: "MANAGER",
-                          },
-                          {
-                            label: "Vendedor",
-                            value: "SELLER",
-                          },
-                        ]}
-                        onValueChange={onChange}
-                        errorMessage={formState.errors.access?.message}
-                      />
-                    )}
-                    name="access"
-                  />
-                </View>
-              ))}
+            {((["OWNER"].includes(user?.access ?? "") && userId) ||
+              !userId) && (
+              <View>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, value }, formState }) => (
+                    <Select
+                      value={value}
+                      placeholder="Permição de acesso"
+                      items={[
+                        {
+                          label: "Proprietário",
+                          value: "OWNER",
+                        },
+                        {
+                          label: "Gerente",
+                          value: "MANAGER",
+                        },
+                        {
+                          label: "Vendedor",
+                          value: "SELLER",
+                        },
+                      ]}
+                      onValueChange={onChange}
+                      errorMessage={formState.errors.access?.message}
+                    />
+                  )}
+                  name="access"
+                />
+              </View>
+            )}
             <View>
               <Controller
                 control={control}
@@ -185,7 +185,7 @@ export const UserForm = ({ userId }: UserFormProps) => {
             type !== "PHONE" ? "flex-1 flex-row gap-x-4" : " flex-col"
           } `}
         >
-          <View className="flex-1">
+          <View className={type !== "PHONE" ? `flex-1` : `w-full`}>
             <Controller
               control={control}
               render={({ field: { onChange, onBlur, value }, formState }) => (
@@ -201,7 +201,7 @@ export const UserForm = ({ userId }: UserFormProps) => {
             />
           </View>
           {passwordChange ? (
-            <View className="flex-1">
+            <View className={type !== "PHONE" ? `flex-1` : `w-full`}>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value }, formState }) => (

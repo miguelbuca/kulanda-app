@@ -135,7 +135,7 @@ interface CategoryType {
   id: string;
   name: string;
   description?: string;
-  type: CategoryEnumType;
+  type: keyof typeof CategoryEnumType;
   charges: ChargeType[];
   createdAt: DateTime;
   updatedAt: DateTime;

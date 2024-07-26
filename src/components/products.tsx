@@ -10,10 +10,9 @@ import { useDevice } from "../hooks/use-device";
 
 export interface ProductsProps {
   filter?: FilterProductInput;
-  onLengthChange?: (value: boolean) => void;
 }
 
-export const Products = ({ filter, onLengthChange }: ProductsProps) => {
+export const Products = ({ filter }: ProductsProps) => {
   const [data, setData] = useState<ProductType[]>([]);
   const { store } = useStore();
   const { addItem, qtd } = useOrder();
@@ -26,7 +25,6 @@ export const Products = ({ filter, onLengthChange }: ProductsProps) => {
       filter,
     },
     onCompleted: ({ getProducts }) => {
-      onLengthChange?.(getProducts.length > 0);
       setData(getProducts);
     },
     onError: (error) => {
@@ -38,7 +36,7 @@ export const Products = ({ filter, onLengthChange }: ProductsProps) => {
     <View
       className={`${
         type !== "PHONE" ? "px-10 gap-3" : "px-4 gap-2"
-      } py-5 flex-row flex-wrap justify-between`}
+      } py-5 pb-24 flex-row flex-wrap justify-between`}
     >
       {data.map((item, index) => (
         <TouchableOpacity

@@ -79,6 +79,9 @@ export const GET_PRODUCTS_BY_STORE = gql`
       description
       price
       stock
+      category {
+        type
+      }
       charges {
         id
         name
@@ -106,6 +109,9 @@ export const GET_SERVICES_BY_STORE = gql`
       image
       description
       price
+      category {
+        type
+      }
       charges {
         id
         name

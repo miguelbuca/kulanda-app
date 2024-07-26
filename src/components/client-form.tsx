@@ -247,12 +247,12 @@ export const ClientForm = ({ clientId }: ClientFormProps) => {
           ) : null}
         </View>
 
-        <View className={`flex flex-row items-center`}>
+        <View>
           <View className="mt-14">
             <Button
               isLoading={createLoading}
               onPress={handleSubmit(handleSaveTenant)}
-              className={type !== "PHONE" ? `w-[100px] mt-12` : ``}
+              className={type !== "PHONE" ? `w-[100px] mt-12` : `w-full`}
             >
               Salvar
             </Button>

@@ -10,10 +10,9 @@ import { useDevice } from "../hooks/use-device";
 
 export interface ServicesProps {
   filter?: FilterServiceInput;
-  onLengthChange?: (value: boolean) => void;
 }
 
-export const Services = ({ filter,onLengthChange }: ServicesProps) => {
+export const Services = ({ filter }: ServicesProps) => {
   const [data, setData] = useState<ProductType[]>([]);
   const { store } = useStore();
   const { addItem, qtd } = useOrder();
@@ -26,7 +25,6 @@ export const Services = ({ filter,onLengthChange }: ServicesProps) => {
       filter,
     },
     onCompleted: ({ getServices }) => {
-      onLengthChange?.(getServices.length>0);
       setData(getServices);
     },
     onError: (error) => {
@@ -37,45 +35,37 @@ export const Services = ({ filter,onLengthChange }: ServicesProps) => {
   return (
     <View
       className={`${
-        type !== "PHONE" ? "px-10 gap-3" : "px-4 gap-2"
-      } py-5 flex-row flex-wrap justify-between`}
+        type !== "PHONE"
+          ? "px-10 gap-3 mx-2 flex-row flex-wrap justify-between"
+          : "px-4 gap-2 flex-col"
+      } p-5 pb-24  `}
     >
       {data.map((item, index) => (
         <TouchableOpacity
           style={
             type !== "PHONE"
               ? {
-                  width: 260,
-                  marginBottom: 8,
+                  width: "48.5%",
                 }
-              : {
-                  width: "47%",
-                  marginBottom: 8,
-                }
+              : {}
           }
           onPress={() => {
             if (!qtd.includes(item.id ?? "")) addItem?.(item);
           }}
           key={index}
         >
-          <View
-            className={`flex ${
-              type !== "PHONE" ? "h-[340px]" : "h-[230px]"
-            } flex-col bg-white shadow-sm p-2 w-full rounded-md`}
-          >
-            <View
-              className={`relative ${
-                type !== "PHONE" ? "h-48" : "h-28"
-              } items-center justify-center`}
-            >
-              <Image
-                className="h-full w-full rounded-md"
-                source={{
-                  uri: item.image,
-                }}
-              />
-            </View>
-            <View className="flex flex-col flex-1">
+          <View className={`flex flex-row bg-white shadow-sm p-2 rounded-md`}>
+            {item.image ? (
+              <View className={`relative items-center justify-center`}>
+                <Image
+                  className="h-20 w-20 rounded-md"
+                  source={{
+                    uri: item.image,
+                  }}
+                />
+              </View>
+            ) : null}
+            <View className="flex flex-col flex-1 px-3">
               <Text
                 ellipsizeMode="tail"
                 numberOfLines={2}

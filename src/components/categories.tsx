@@ -1,17 +1,18 @@
 import { View, Text, FlatList, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { GET_CATEGORIES_BY_STORE } from "../graphql/queries";
 import { useQuery } from "@apollo/client";
 import { client } from "../api/client";
 import { useStore } from "../hooks/use-store";
 import { useDevice } from "../hooks/use-device";
+import { SwitchServiceOrProducType } from "./switch-service-or-product";
 
 export interface CategoriesProps {
+  swithType?: SwitchServiceOrProducType;
   onPress(item?: CategoryType): void;
-  isFullView?: boolean;
 }
 
-export const Categories = ({ onPress, isFullView }: CategoriesProps) => {
+export const Categories = ({ swithType, onPress }: CategoriesProps) => {
   const [data, setData] = useState<CategoryType[]>([]);
   const [selectedCategoryName, setSelectedCategoryName] = useState("Todos");
   const { store } = useStore();
@@ -30,10 +31,15 @@ export const Categories = ({ onPress, isFullView }: CategoriesProps) => {
     },
   });
 
+  useEffect(() => {
+    onPress(undefined);
+    setSelectedCategoryName("Todos");
+  }, [swithType]);
+
   return (
     <View>
       <FlatList
-        data={data}
+        data={data.filter(({ type }) => type === swithType)}
         className={type !== "PHONE" ? "p-8 pt-0 pb-4" : "py-3 px-2"}
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -87,17 +93,6 @@ export const Categories = ({ onPress, isFullView }: CategoriesProps) => {
               >
                 {item.name}
               </Text>
-              {isFullView && (
-                <Text
-                  className={`font-thin ml-1 uppercase text-xs ${
-                    item.name === selectedCategoryName
-                      ? "text-white"
-                      : "text-black"
-                  }`}
-                >
-                  {item.type === "PRODUCT" ? "Produto" : "Serviço"}
-                </Text>
-              )}
             </View>
           </TouchableOpacity>
         )}

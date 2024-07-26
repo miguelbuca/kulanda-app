@@ -329,16 +329,18 @@ const Chart = () => {
                       index === 1 && "border-t border-t-gray-100"
                     }`}
                   >
-                    <View>
-                      <View className="h-14 w-14">
-                        <Image
-                          className="h-full w-full rounded-md"
-                          source={{
-                            uri: item.image,
-                          }}
-                        />
+                    {item.image ? (
+                      <View>
+                        <View className="h-14 w-14">
+                          <Image
+                            className="h-full w-full rounded-md"
+                            source={{
+                              uri: item.image,
+                            }}
+                          />
+                        </View>
                       </View>
-                    </View>
+                    ) : null}
                     <View className="flex flex-col">
                       <Text className="font-semibold">{item?.name}</Text>
                       <Text className="text-xs opacity-50">
@@ -374,16 +376,18 @@ const Chart = () => {
                       index === 1 && "border-t border-t-gray-100"
                     }`}
                   >
-                    <View>
-                      <View className="h-14 w-14">
-                        <Image
-                          className="h-full w-full rounded-md"
-                          source={{
-                            uri: item.image,
-                          }}
-                        />
+                    {item.image ? (
+                      <View>
+                        <View className="h-14 w-14">
+                          <Image
+                            className="h-full w-full rounded-md"
+                            source={{
+                              uri: item.image,
+                            }}
+                          />
+                        </View>
                       </View>
-                    </View>
+                    ) : null}
                     <View className="flex flex-col">
                       <Text className="font-semibold">{item?.name}</Text>
                       <Text className="text-xs opacity-50">

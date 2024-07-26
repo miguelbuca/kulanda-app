@@ -6,6 +6,7 @@ import {
   ScrollView,
   Dimensions,
   Image,
+  Pressable,
 } from "react-native";
 import React, {
   useCallback,
@@ -23,6 +24,8 @@ import {
   Order,
   Products,
   Services,
+  SwitchServiceOrProduct,
+  SwitchServiceOrProducType,
 } from "@/src/components";
 import { SplashScreen, useNavigation } from "expo-router";
 import { useAuth } from "@/src/hooks/use-auth";
@@ -46,13 +49,12 @@ const Main = () => {
   const { items } = useOrder();
 
   const [selectedCategory, setSelectedCategory] = useState<CategoryType>();
+  const [swithType, setSwithType] =
+    useState<SwitchServiceOrProducType>("PRODUCT");
   const [name, setName] = useState("");
 
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  const [haveProduct, setHaveProduct] = useState<boolean>();
-  const [haveService, setHaveService] = useState<boolean>();
 
   const snapPoints = useMemo(() => ["1%", "90%"], []);
 
@@ -68,9 +70,6 @@ const Main = () => {
     };
   }, [selectedCategory, name]);
 
-  const isFullView = useMemo(() => {
-    return haveProduct && haveService;
-  }, [haveProduct, haveService]);
 
   useEffect(() => {
     if (type === "PHONE") {
@@ -125,9 +124,12 @@ const Main = () => {
                 </Text>
               </View>
             </View>
+            <View>
+              <SwitchServiceOrProduct onTypeChange={setSwithType} />
+            </View>
           </View>
           <View className="flex-1 flex flex-col pt-0">
-            <Categories isFullView={isFullView} onPress={setSelectedCategory} />
+            <Categories swithType={swithType} onPress={setSelectedCategory} />
             <View className="flex flex-row px-10 items-center">
               <View className="flex-1">
                 <Input
@@ -147,34 +149,11 @@ const Main = () => {
               </View>
             </View>
             <View className="flex flex-col mb-4">
-              {isFullView && (
-                <View className="relative text-center justify-center flex flex-row m-10 mb-4 border-b border-gray-200">
-                  <Text className="text-xs font-light bg-gray-50 -mb-4 p-2 px-8 uppercase text-gray-300 mr-3">
-                    Produtos
-                  </Text>
-                </View>
+              {swithType === "PRODUCT" ? (
+                <Products filter={filter} />
+              ) : (
+                <Services filter={filter} />
               )}
-              <Products
-                onLengthChange={(value) =>
-                  haveProduct === undefined && setHaveProduct(value)
-                }
-                filter={filter}
-              />
-            </View>
-            <View className="flex flex-col mb-4">
-              {isFullView && (
-                <View className="relative text-center justify-center flex flex-row m-10 mb-4 border-b border-gray-200">
-                  <Text className="text-xs font-light bg-gray-50 -mb-4 p-2 px-8 uppercase text-gray-300 mr-3">
-                    Serviços
-                  </Text>
-                </View>
-              )}
-              <Services
-                onLengthChange={(value) =>
-                  haveService === undefined && setHaveService(value)
-                }
-                filter={filter}
-              />
             </View>
           </View>
         </View>
@@ -188,7 +167,12 @@ const Main = () => {
       }}
       className="flex-1 bg-gray-50"
     >
-      <ScrollView>
+      <View className="absolute bottom-6 w-full z-20 flex justify-center items-center mt-6">
+        <View className="flex justify-center items-center">
+          <SwitchServiceOrProduct onTypeChange={setSwithType} />
+        </View>
+      </View>
+      <ScrollView className="relative">
         <View className="flex flex-col">
           <View className="flex flex-row px-4 items-center mt-6 mb-4">
             <View className="flex flex-1">
@@ -209,36 +193,13 @@ const Main = () => {
               </Button>
             </View>
           </View>
-          <Categories isFullView={isFullView} onPress={setSelectedCategory} />
+          <Categories swithType={swithType} onPress={setSelectedCategory} />
           <View className="flex flex-col mb-4">
-            {isFullView && (
-              <View className="relative text-center justify-center flex flex-row m-4 mb-2 border-b border-gray-200">
-                <Text className="text-xs font-light bg-gray-50 -mb-4 p-2 px-8 uppercase text-gray-300 mr-3">
-                  Produtos
-                </Text>
-              </View>
+            {swithType === "PRODUCT" ? (
+              <Products filter={filter} />
+            ) : (
+              <Services filter={filter} />
             )}
-            <Products
-              onLengthChange={(value) =>
-                haveProduct === undefined && setHaveProduct(value)
-              }
-              filter={filter}
-            />
-          </View>
-          <View className="flex flex-col mb-4">
-            {isFullView && (
-              <View className="relative text-center justify-center flex flex-row m-4 mb-2 border-b border-gray-200">
-                <Text className="text-xs font-light bg-gray-50 -mb-4 p-2 px-8 uppercase text-gray-300 mr-3">
-                  Serviços
-                </Text>
-              </View>
-            )}
-            <Services
-              onLengthChange={(value) =>
-                haveService === undefined && setHaveService(value)
-              }
-              filter={filter}
-            />
           </View>
         </View>
       </ScrollView>
