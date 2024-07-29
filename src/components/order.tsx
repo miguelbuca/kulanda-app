@@ -18,8 +18,6 @@ export const Order = ({ onClose }: OrderProps) => {
   const { subtotalPrice, totalPrice, totalTaxes } = useOrder();
   const { type } = useDevice();
 
-  const [assets] = useAssets([require("@/assets/images/multicaixa.png")]);
-
   const router = useRouter();
 
   return (
@@ -83,18 +81,12 @@ export const Order = ({ onClose }: OrderProps) => {
           <Button
             onPress={() => {
               onClose?.();
-              router.push("_/payment");
+              router.push("_/store/payment");
             }}
             className="flex-row items-center justify-center"
           >
             Efectuar pagamento
           </Button>
-          <Image
-            className="h-6 mt-2 w-28 self-center"
-            source={{
-              uri: assets?.[0]?.uri,
-            }}
-          />
         </View>
       </View>
     </SafeAreaView>

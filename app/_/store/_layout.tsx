@@ -26,6 +26,19 @@ const StoreLayout = () => {
             presentation: undefined,
           }}
         />
+        <Stack.Screen
+          name="payment"
+          options={{
+            title: "Efectuar pagamento",
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen
+          name="payment-status"
+          options={{
+            headerShown: true,
+          }}
+        />
       </Stack>
     </View>
   );

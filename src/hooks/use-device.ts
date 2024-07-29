@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import * as Device from "expo-device";
 
-import * as ScreenOrientation from "expo-screen-orientation";
-
 export type Devices =
   /**
    * An unrecognized device type.
@@ -31,28 +29,6 @@ export const useDevice = () => {
   useEffect(() => {
     Device.getDeviceTypeAsync().then((deviceType) => setDevice(deviceType));
   }, []);
-
-  const changeScreenOrientation = useCallback(
-    async (device: Device.DeviceType) => {
-      switch (Device.DeviceType[device]) {
-        case "PHONE":
-          ScreenOrientation.lockAsync(
-            ScreenOrientation.OrientationLock.PORTRAIT_UP
-          );
-          break;
-
-        default:
-          ScreenOrientation.lockAsync(
-            ScreenOrientation.OrientationLock.LANDSCAPE_LEFT
-          );
-          break;
-      }
-    },
-    []
-  );
-  useEffect(() => {
-    if (device) changeScreenOrientation(device);
-  }, [device]);
 
   return {
     type: (device ? Device.DeviceType[device] : null) as Devices,

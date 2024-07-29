@@ -36,7 +36,7 @@ export const Products = ({ filter }: ProductsProps) => {
     <View
       className={`${
         type !== "PHONE" ? "px-10 gap-3" : "px-4 gap-2"
-      } py-5 pb-24 flex-row flex-wrap justify-between`}
+      } py-5 pb-24 flex-row flex-wrap justify-start`}
     >
       {data.map((item, index) => (
         <TouchableOpacity

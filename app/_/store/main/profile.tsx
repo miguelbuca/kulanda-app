@@ -126,7 +126,7 @@ const Profile = () => {
         </View>
         {type === "PHONE" ? (
           <TouchableOpacity onPress={logOut}>
-            <View className="flex flex-row mt-8 justify-center items-center">
+            <View className="flex flex-row mt-8 justify-center items-center mb-24">
               <View className="mr-2">
                 <Ionicons
                   name="log-out-outline"

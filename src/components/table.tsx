@@ -26,6 +26,9 @@ export interface TableProps {
   withPrint?: boolean;
   onEventHandler?(type: "edit" | "delete" | "print", value: any): void;
   renderCell?: {
+    [Symbol in string]: (value: any, item?: any) => ReactNode;
+  };
+  renderColumn?: {
     [Symbol in string]: (value: any) => ReactNode;
   };
 }
@@ -38,6 +41,7 @@ export const Table = <T,>({
   variables,
   excludColumns = [],
   renderCell,
+  renderColumn,
   limit = 3,
   onEventHandler,
 }: TableProps) => {
@@ -63,9 +67,9 @@ export const Table = <T,>({
   const { data, error } = useQuery(document, {
     client: client,
     variables: {
+      ...variables,
       storeId: store.id,
       filter,
-      ...variables,
     },
     fetchPolicy: "no-cache",
   });
@@ -124,7 +128,9 @@ export const Table = <T,>({
                     ellipsizeMode="tail"
                     className="font-bold uppercase text-[10px] "
                   >
-                    {column}
+                    {renderColumn?.[column]
+                      ? renderColumn[column](column ?? "-")
+                      : column ?? "-"}
                   </Text>
                 </View>
               ) : null
@@ -151,7 +157,8 @@ export const Table = <T,>({
                             >
                               {renderCell?.[column]
                                 ? renderCell[column](
-                                    (item as any)[column] ?? "-"
+                                    (item as any)[column] ?? "-",
+                                    item
                                   )
                                 : (item as any)[column] ?? "-"}
                             </Text>
@@ -218,7 +225,9 @@ export const Table = <T,>({
                           key={index}
                         >
                           <Text className="font-bold uppercase text-[10px] ">
-                            {column}
+                            {renderColumn?.[column]
+                              ? renderColumn[column](column ?? "-")
+                              : column ?? "-"}
                           </Text>
                           <Text className="text-[10px] max-w-[70%]">
                             {renderCell?.[column]

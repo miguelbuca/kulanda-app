@@ -14,6 +14,7 @@ const PaymentStatus = () => {
     if (!lastSale) return;
     await Print.printAsync({
       html: Receipt(lastSale),
+      width: 210
     });
   };
 

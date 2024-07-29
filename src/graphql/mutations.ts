@@ -15,6 +15,7 @@ export const CREATE_SALE = gql`
     $bankCard: Float
     $totalPrice: Float
     $orders: [CreateOrderSaleInput!]!
+    $clientId: ID
   ) {
     createSale(
       change: $change
@@ -22,6 +23,7 @@ export const CREATE_SALE = gql`
       bankCard: $bankCard
       totalPrice: $totalPrice
       orders: $orders
+      clientId: $clientId
     ) {
       id
       change

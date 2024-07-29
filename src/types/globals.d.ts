@@ -1,7 +1,6 @@
-// Scalars
-type DateTime = string;
+type ID = string;
+type DateTime = string; // Assume a string in ISO 8601 format
 
-// Enums
 enum AccessEnumType {
   SELLER = "SELLER",
   OWNER = "OWNER",
@@ -19,11 +18,6 @@ enum ChargeEnumType {
   DISCOUNT = "DISCOUNT",
 }
 
-enum ClientEnumType {
-  INDIVIDUAL = "INDIVIDUAL",
-  LEGAL = "LEGAL",
-}
-
 enum PeriodReportStoreOptionsEnumType {
   DAY = "DAY",
   WEEK = "WEEK",
@@ -31,207 +25,225 @@ enum PeriodReportStoreOptionsEnumType {
   YEAR = "YEAR",
 }
 
-// Types
-interface UserType {
-  id: string;
+enum ClientEnumType {
+  INDIVIDUAL = "INDIVIDUAL",
+  LEGAL = "LEGAL",
+}
+
+type UserType = {
+  id: ID;
   fullName: string;
   username: string;
   phone: string;
   email: string;
   access: AccessEnumType;
-  storeId?: string;
+  storeId?: ID;
   createdAt: DateTime;
   updatedAt: DateTime;
-}
+};
 
-interface AuthTokenType {
+type AuthTokenType = {
   access_token: string;
-}
+};
 
-interface StoreType {
-  id: string;
+type StoreType = {
+  id: ID;
   address: string;
   designation: string;
   phone: string;
+  globalSale?: string;
   createdAt: DateTime;
   updatedAt: DateTime;
   products: ProductType[];
   sellers: UserType[];
   sales: SaleType[];
-}
+};
 
-interface OrderType {
-  id: string;
-  saleId: string;
-  productId: string;
-  serviceId: string;
+type OrderType = {
+  id: ID;
+  saleId: ID;
+  productId: ID;
+  serviceId: ID;
   createdAt: DateTime;
   updatedAt: DateTime;
   products: ProductType[];
   services: ServiceType[];
-}
+};
 
-interface SaleType {
-  id: string;
+type SaleType = {
+  id: ID;
   change?: number;
   code: number;
   cash?: number;
   bankCard?: number;
   totalPrice?: number;
-  sellerId: string;
+  sellerId: ID;
+  clientId: ID;
   createdAt: DateTime;
   updatedAt: DateTime;
   orders: OrderType[];
   seller?: UserType;
-}
+};
 
-interface ReportStoreType {
-  totalSales?: number;
-  sales?: SaleType[];
-  totalSalesBalance?: number;
-}
+type ReportStoreType = {
+  totalSales: number;
+  sales: SaleType[];
+  totalSalesBalance: number;
+};
 
-interface CompanyType {
-  tenantId: string;
-  id: string;
+type CompanyType = {
+  tenantId: ID;
+  id: ID;
   nif: string;
   name: string;
   address: string;
   logo: string;
-  caeId: string;
+  caeId: ID;
   stores: StoreType[];
   createdAt: DateTime;
   updatedAt: DateTime;
   cae: CAEType;
-}
+};
 
-interface CAEType {
-  id: string;
+type CAEType = {
+  id: ID;
   name: string;
   code: number;
-  sectorId: string;
+  sectorId: ID;
   createdAt: DateTime;
   updatedAt: DateTime;
   sector: SectorType;
-}
+};
 
-interface ProductType {
-  id: string;
+type ProductType = {
+  id: ID;
   name: string;
   description?: string;
   image?: string;
   price: number;
   stock?: number;
   expiresOn: DateTime;
-  categoryId: string;
-  storeId: string;
+  categoryId: ID;
+  storeId: ID;
   createdAt: DateTime;
   updatedAt: DateTime;
   category: CategoryType;
   charges: ChargeType[];
-}
+};
 
-interface CategoryType {
-  id: string;
+type CategoryType = {
+  id: ID;
   name: string;
   description?: string;
-  type: keyof typeof CategoryEnumType;
-  charges: ChargeType[];
+  type: CategoryEnumType;
   createdAt: DateTime;
   updatedAt: DateTime;
-}
+  charges: ChargeType[];
+};
 
-interface ServiceType {
-  id: string;
+type ChargeType = {
+  id: ID;
+  name: string;
+  acronym: string;
+  percentage: number;
+  type: ChargeEnumType;
+  storeId?: ID;
+  categoryId?: ID;
+  serviceId?: ID;
+  productId?: ID;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+};
+
+type ServiceType = {
+  id: ID;
   name: string;
   description?: string;
   image?: string;
   price: number;
-  categoryId: string;
-  storeId: string;
+  categoryId: ID;
+  storeId: ID;
   createdAt: DateTime;
   updatedAt: DateTime;
   category: CategoryType;
   charges: ChargeType[];
-}
+};
 
-interface SectorType {
-  id: string;
+type SectorType = {
+  id: ID;
   name: string;
   createdAt: DateTime;
   updatedAt: DateTime;
-}
+};
 
-interface TenantCredentialsType {
+type TenantCredentialsType = {
   access_key: string;
-}
+};
 
-interface ChargeType {
-  id: string;
-  name: string;
-  acronym: string;
-  percentage: number;
-  type: keyof typeof ChargeEnumType;
-  storeId?: string;
-  categoryId?: string;
-  serviceId?: string;
-  productId?: string;
-  createdAt: DateTime;
-  updatedAt: DateTime;
-}
-
-interface ClientType {
-  id: string;
+type ClientType = {
+  id: ID;
   fullName: string;
   nif?: string;
   phone: string;
   email?: string;
   address: string;
   type?: ClientEnumType;
-  caeId?: string;
-  storeId?: string;
+  caeId?: ID;
+  storeId?: ID;
   createdAt: DateTime;
   updatedAt: DateTime;
-}
+};
 
-// Inputs
-interface ReportStoreOptionsInput {
+type ReportStoreOptionsInput = {
   period?: PeriodReportStoreOptionsEnumType;
   from?: DateTime;
-  sellerId?: string;
-}
+  sellerId?: ID;
+};
 
-interface FilterProductInput {
+type FilterProductInput = {
   name?: string;
-  categoryId?: string;
+  categoryId?: ID;
   paginate?: FilterProductPaginateInput;
-}
+};
 
-interface FilterProductPaginateInput {
+type FilterProductPaginateInput = {
   page?: number;
   limit?: number;
-}
+};
 
-interface FilterServiceInput {
+type FilterServiceInput = {
   name?: string;
-  categoryId?: string;
+  categoryId?: ID;
   paginate?: FilterServicePaginateInput;
-}
+};
 
-interface FilterServicePaginateInput {
+type FilterServicePaginateInput = {
   page?: number;
   limit?: number;
-}
+};
 
-interface CreateOrderSaleInput {
-  productId?: string;
-  serviceId?: string;
-}
+type FilterClientInput = {
+  storeId?: ID;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  paginate?: FilterClientPaginateInput;
+};
 
-interface CreateCompanyInput {
+type FilterClientPaginateInput = {
+  page?: number;
+  limit?: number;
+};
+
+type CreateOrderSaleInput = {
+  productId?: ID;
+  serviceId?: ID;
+};
+
+type CreateCompanyInput = {
   nif: string;
   name: string;
   address: string;
   logo?: string;
-  caeId: string;
-}
+  caeId: ID;
+};

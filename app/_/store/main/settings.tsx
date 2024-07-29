@@ -44,6 +44,12 @@ const Settings = () => {
             break;
         }
       },
+      renderColumn: {
+        fullName: () => "Nome completo",
+        phone: () => "Telemóvel",
+        email: () => "E-mail",
+        access: () => "Accesso",
+      },
       renderCell: {
         phone: (value) => {
           return (
@@ -84,6 +90,7 @@ const Settings = () => {
       withAddEvent() {
         route.push("_/store/customer/create");
       },
+      withSearch: "fullName",
       onEventHandler(type, value: UserType) {
         switch (type) {
           case "edit":
@@ -126,6 +133,14 @@ const Settings = () => {
           );
         },
       },
+      renderColumn: {
+        fullName: () => "Nome completo",
+        phone: () => "Telemóvel",
+        email: () => "E-mail",
+        access: () => "Accesso",
+        type: () => "Tipo de pessoa",
+        address: () => "Endereço",
+      },
     },
     {
       name: "Cobranças",
@@ -144,6 +159,12 @@ const Settings = () => {
             break;
         }
       },
+      renderColumn: {
+        name: () => "Nome",
+        percentage: () => "(%) Percentagem",
+        type: () => "Tipo",
+        acronym: () => "acrônimo",
+      },
     },
     {
       name: "Categorias",
@@ -161,6 +182,11 @@ const Settings = () => {
           default:
             break;
         }
+      },
+      renderColumn: {
+        name: () => "Nome",
+        description: () => "Descrição",
+        type: () => "Tipo",
       },
     },
     {
@@ -209,6 +235,14 @@ const Settings = () => {
           );
         },
       },
+      renderColumn: {
+        name: () => "Nome",
+        category: () => "Categoria",
+        image: () => "Imagem",
+        description: () => "Descrição",
+        price: () => "Preço unitário",
+        stock: () => "Quantidade em estoque",
+      },
     },
     {
       name: "Serviços",
@@ -256,6 +290,14 @@ const Settings = () => {
           );
         },
       },
+      renderColumn: {
+        name: () => "Nome",
+        category: () => "Categoria",
+        image: () => "Imagem",
+        description: () => "Descrição",
+        price: () => "Preço unitário",
+        stock: () => "Quantidade em estoque",
+      },
     },
     {
       name: "Faturas",
@@ -264,6 +306,9 @@ const Settings = () => {
       canDeleteRow: false,
       withPrint: true,
       renderCell: {
+        client: (client: Pick<ClientType, "id" | "fullName">) => {
+          return client.fullName;
+        },
         change: (value) => {
           return formatMoney(Number(value));
         },
@@ -331,6 +376,15 @@ const Settings = () => {
           );
         },
       },
+      renderColumn: {
+        client: () => "Cliente",
+        change: () => "Troco",
+        cash: () => "Dinheiro",
+        bankCard: () => "Transação bancária",
+        totalPrice: () => "Total",
+        seller: () => "Vendedor",
+        orders: () => "Pedidos",
+      },
     },
   ];
 
@@ -338,27 +392,30 @@ const Settings = () => {
     <FlatList
       className="flex-1 p-6 bg-gray-50 pb-8"
       data={tables}
+      ListFooterComponent={() => <View className="flex flex-col"></View>}
       renderItem={({ item, index }) => (
-        <Accordion
-          style={{
-            marginBottom: tables.length - 1 === index ? 30 : 15,
-          }}
-          title={item.name}
-          icon={item.icon}
-          key={index}
-          withAddEvent={item.withAddEvent}
-        >
-          <Table
-            limit={
-              type === "PHONE" || type === "UNKNOWN"
-                ? 3
-                : type === "TABLET"
-                ? 5
-                : 10
-            }
-            {...item}
-          />
-        </Accordion>
+        <>
+          <Accordion
+            style={{
+              marginBottom: tables.length - 1 === index ? 30 : 15,
+            }}
+            title={item.name}
+            icon={item.icon}
+            key={index}
+            withAddEvent={item.withAddEvent}
+          >
+            <Table
+              limit={
+                type === "PHONE" || type === "UNKNOWN"
+                  ? 3
+                  : type === "TABLET"
+                  ? 5
+                  : 10
+              }
+              {...item}
+            />
+          </Accordion>
+        </>
       )}
     />
   );

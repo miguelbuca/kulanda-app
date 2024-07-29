@@ -18,7 +18,7 @@ export const SwitchServiceOrProduct = ({
     onTypeChange?.(type);
   }, [type]);
   return (
-    <View className={`flex flex-row w-[200px]  rounded-[100px] p-2 ${device === 'PHONE' ? 'bg-white/70 shadow-lg' : 'bg-white shadow-sm'}`}>
+    <View className={`flex flex-row w-[200px]  rounded-[100px] p-2 ${device === 'PHONE' ? 'bg-white shadow-lg' : 'bg-white shadow-sm'}`}>
       <TouchableOpacity
         style={{
           flex: 1,

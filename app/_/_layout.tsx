@@ -51,37 +51,6 @@ export default function PrivateLayout() {
           options={{ title: "Estabelecimento", headerShown: true }}
           name="establishment"
         />
-        <Stack.Screen
-          options={
-            type === "PHONE"
-              ? {
-                  title: "Pagamento",
-                  headerShown: true,
-                }
-              : {
-                  title: "Pagamento",
-                  headerShown: true,
-                  presentation: "formSheet",
-                }
-          }
-          name="payment"
-        />
-        <Stack.Screen
-          options={
-            type === "PHONE"
-              ? {
-                  headerShown: true,
-                  presentation: "modal",
-                  title: "Comprovativo",
-                }
-              : {
-                  headerShown: false,
-                  presentation: "modal",
-                  title: "Comprovativo",
-                }
-          }
-          name="payment-status"
-        />
       </Stack>
       <StatusBar style="dark" />
     </>

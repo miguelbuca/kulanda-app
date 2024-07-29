@@ -240,8 +240,8 @@ export const GET_USERS = gql`
 `;
 
 export const GET_CLIENTS = gql`
-  query GetClients {
-    getClients {
+  query GetClients($filter: FilterClientInput) {
+    getClients(filter: $filter) {
       id
       fullName
       nif
@@ -270,6 +270,10 @@ export const GET_CLIENT_BY_ID = gql`
 export const GET_SALE_BY_STORE = gql`
   query GetSales($storeId: ID!) {
     getSales(storeId: $storeId) {
+      client {
+        id
+        fullName
+      }
       id
       change
       cash

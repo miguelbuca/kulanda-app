@@ -48,7 +48,7 @@ export const Input = ({
         {!currencyProps && !isPhone ? (
           <TextInput
             placeholderTextColor={"#aeaeae"}
-            className={`h-12 px-4 flex-1 rounded-lg dark:text-white`}
+            className={`h-12 px-4 text-black flex-1 rounded-lg dark:text-white`}
             {...args}
           />
         ) : currencyProps ? (
