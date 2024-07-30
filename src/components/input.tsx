@@ -48,12 +48,12 @@ export const Input = ({
         {!currencyProps && !isPhone ? (
           <TextInput
             placeholderTextColor={"#aeaeae"}
-            className={`h-12 px-4 text-black flex-1 rounded-lg dark:text-white`}
+            className={`h-12 px-4 text-black flex-1 rounded-lg`}
             {...args}
           />
         ) : currencyProps ? (
           <CurrencyInput
-            className="h-12 px-4 flex-1 rounded-lg dark:text-white"
+            className="h-12 px-4 flex-1 rounded-lg"
             {...(args as any)}
             {...(currencyProps as any)}
           />
@@ -69,7 +69,7 @@ export const Input = ({
                 : undefined
             }
             initialCountry="ao"
-            className="h-12 px-2 flex-1 rounded-lg dark:text-white"
+            className="h-12 px-2 flex-1 rounded-lg"
             autoFormat
             onChangePhoneNumber={(value) => {
               if (!value) return;
