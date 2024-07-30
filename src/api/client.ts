@@ -30,6 +30,6 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: ApolloLink.from([
     authorized,
-    new HttpLink({ uri: "http://192.168.0.250:3000/graphql" }),
+    new HttpLink({ uri: process.env.EXPO_PUBLIC_API_URL }),
   ]),
 });
