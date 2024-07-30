@@ -31,7 +31,9 @@
     "web": {
       "bundler": "metro",
       "output": "single",
-      "favicon": "./assets/images/icon.png"
+      "favicon": "./assets/images/icon.png",
+      "name": "Kulanda",
+      "description": "Invoicing Software",
     },
     "plugins": [
       "expo-router",

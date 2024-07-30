@@ -52,28 +52,30 @@ const Switch = () => {
       <FlatList
         className="p-4"
         data={stores}
-        ListHeaderComponent={() => (
-          <>
-            <View className="flex flex-col items-center justify-center my-8 self-center">
-              <View className="mb-3">
-                <Image
-                  className="h-24 w-24 rounded-full"
-                  resizeMode="stretch"
-                  source={{
-                    uri: company?.logo,
-                  }}
-                />
+        ListHeaderComponent={() =>
+          company?.id ? (
+            <>
+              <View className="flex flex-col items-center justify-center my-8 self-center">
+                <View className="mb-3">
+                  <Image
+                    className="h-24 w-24 rounded-full"
+                    resizeMode="stretch"
+                    source={{
+                      uri: company?.logo,
+                    }}
+                  />
+                </View>
+                <Text className="text-base font-semibold text-primary-500">
+                  {company?.name}
+                </Text>
+                <Text className="text-xs mt-2 font-light">
+                  <Text className="font-normal">NIF: </Text>
+                  {company?.nif}
+                </Text>
               </View>
-              <Text className="text-base font-semibold text-primary-500">
-                {company?.name}
-              </Text>
-              <Text className="text-xs mt-2 font-light">
-                <Text className="font-normal">NIF: </Text>
-                {company?.nif}
-              </Text>
-            </View>
-          </>
-        )}
+            </>
+          ) : null
+        }
         renderItem={({ item, index }) => (
           <TouchableOpacity
             onPress={() => {

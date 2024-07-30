@@ -28,7 +28,7 @@ export default function SignIn() {
     client: client,
   });
 
-  const [login] = useMutation(SIGN_IN, {
+  const [login, { loading }] = useMutation(SIGN_IN, {
     client: client,
     variables: {
       email: emailOrPhone,
@@ -38,8 +38,8 @@ export default function SignIn() {
       storage.save<string>("_kt", signIn.access_token);
       refetch();
     },
-    onError({ message }) {
-      Alert.alert(message);
+    onError() {
+      alert("Invalid credentials");
     },
   });
 
@@ -104,7 +104,9 @@ export default function SignIn() {
               secureTextEntry
             />
           </View>
-          <Button onPress={() => login()}>Iniciar sessão</Button>
+          <Button isLoading={loading} onPress={() => login()}>
+            Iniciar sessão
+          </Button>
           <View>
             {!isValidTenant ? (
               <>
