@@ -8,7 +8,7 @@ const Update = () => {
 
   return (
     <View className="flex-1 bg-gray-50 p-6">
-      <ChargeForm type='fee' chargeId={params.slug as string} />
+      <ChargeForm type='discont' chargeId={params.slug as string} />
     </View>
   );
 };

@@ -17,6 +17,7 @@ import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
 import * as Linking from "expo-linking";
 import { Barcode } from "expo-barcode-generator";
 import { useRouter } from "expo-router";
+import { useAuth } from "@/src/hooks/use-auth";
 
 interface TablePropsList
   extends TableProps,
@@ -25,14 +26,17 @@ interface TablePropsList
 const Settings = () => {
   const { type } = useDevice();
   const route = useRouter();
+  const { user } = useAuth();
 
   const tables: TablePropsList[] = [
     {
       name: "Usuários",
-      icon: <Feather name="user" size={24} />,
       document: GET_USERS,
       withAddEvent() {
         route.push("_/store/user/create");
+      },
+      isValidRow(value: UserType) {
+        return value.id !== user.id;
       },
       onEventHandler(type, value: UserType) {
         switch (type) {
@@ -85,7 +89,6 @@ const Settings = () => {
     },
     {
       name: "Clientes",
-      icon: <Feather name="users" size={24} />,
       document: GET_CLIENTS,
       withAddEvent() {
         route.push("_/store/customer/create");
@@ -143,11 +146,13 @@ const Settings = () => {
       },
     },
     {
-      name: "Cobranças",
-      icon: <Feather name="percent" size={22} />,
+      name: "Emolumentos",
       document: GET_CHARGES_BY_STORE,
       withAddEvent() {
         route.push("_/store/charges/create");
+      },
+      isValidRow(value) {
+        return value.type !== "DISCOUNT";
       },
       onEventHandler(type, value: UserType) {
         switch (type) {
@@ -168,7 +173,6 @@ const Settings = () => {
     },
     {
       name: "Categorias",
-      icon: <Ionicons name="git-pull-request-outline" size={24} />,
       document: GET_CATEGORIES,
       withAddEvent() {
         route.push("_/store/category/create");
@@ -191,7 +195,6 @@ const Settings = () => {
     },
     {
       name: "Produtos",
-      icon: <Ionicons name="fast-food-outline" size={24} />,
       document: GET_PRODUCTS_BY_STORE,
       withAddEvent() {
         route.push("_/store/product/create");
@@ -246,7 +249,6 @@ const Settings = () => {
     },
     {
       name: "Serviços",
-      icon: <Ionicons name="construct-outline" size={24} />,
       document: GET_SERVICES_BY_STORE,
       withAddEvent() {
         route.push("_/store/service/create");
@@ -300,9 +302,36 @@ const Settings = () => {
       },
     },
     {
+      name: "Descontos",
+      document: GET_CHARGES_BY_STORE,
+      withAddEvent() {
+        route.push("_/store/discont/create");
+      },
+      excludColumns: ["type", "acronym"],
+      isValidRow(value) {
+        return value.type === "DISCOUNT";
+      },
+      onEventHandler(type, value: UserType) {
+        switch (type) {
+          case "edit":
+            route.push("_/store/discont/" + value.id);
+            break;
+
+          default:
+            break;
+        }
+      },
+      renderColumn: {
+        name: () => "Nome",
+        percentage: () => "(%) Percentagem",
+      },
+    },
+    {
       name: "Faturas",
-      icon: <Ionicons name="receipt-outline" size={24} />,
       document: GET_SALE_BY_STORE,
+      withAddEvent() {
+        route.push("_/store/main");
+      },
       canDeleteRow: false,
       withPrint: true,
       renderCell: {

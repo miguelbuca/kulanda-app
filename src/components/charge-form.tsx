@@ -32,9 +32,10 @@ const schema = z.object({
 
 export interface ChargeFormProps {
   chargeId?: string;
+  type?: "fee" | "discont";
 }
 
-export const ChargeForm = ({ chargeId }: ChargeFormProps) => {
+export const ChargeForm = ({ chargeId, type: chargeType }: ChargeFormProps) => {
   const { store } = useStore();
   const { type } = useDevice();
   const [charge, setCharge] = useState<ChargeType>();
@@ -81,6 +82,12 @@ export const ChargeForm = ({ chargeId }: ChargeFormProps) => {
   );
 
   const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
+    defaultValues:
+      chargeType === "discont"
+        ? {
+            type: "DISCOUNT",
+          }
+        : undefined,
     values: {
       ...charge,
     } as any,
@@ -94,7 +101,9 @@ export const ChargeForm = ({ chargeId }: ChargeFormProps) => {
     >
       <View className="flex flex-col  bg-white p-6 rounded-xl shadow-sm">
         <View
-          className={`flex ${type !== "PHONE" ? "flex-row gap-x-4" : "flex-col"} mt-4`}
+          className={`flex ${
+            type !== "PHONE" ? "flex-row gap-x-4" : "flex-col"
+          } mt-4`}
         >
           <View
             className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
@@ -133,34 +142,32 @@ export const ChargeForm = ({ chargeId }: ChargeFormProps) => {
           <View
             className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
           >
-            <View>
-              <Controller
-                control={control}
-                render={({ field: { onChange, value }, formState }) => (
-                  <Select
-                    value={value}
-                    placeholder="Tipo (nenhum)"
-                    items={[
-                      {
-                        label: "Imposto",
-                        value: "TAX",
-                      },
-                      {
-                        label: "Taxa",
-                        value: "FEE",
-                      },
-                      {
-                        label: "Desconto",
-                        value: "DISCOUNT",
-                      },
-                    ]}
-                    onValueChange={onChange}
-                    errorMessage={formState.errors.type?.message}
-                  />
-                )}
-                name="type"
-              />
-            </View>
+            {chargeType !== "discont" && (
+              <View>
+                <Controller
+                  control={control}
+                  render={({ field: { onChange, value }, formState }) => (
+                    <Select
+                      value={value}
+                      placeholder="Tipo (nenhum)"
+                      items={[
+                        {
+                          label: "Imposto",
+                          value: "TAX",
+                        },
+                        {
+                          label: "Taxa",
+                          value: "FEE",
+                        },
+                      ]}
+                      onValueChange={onChange}
+                      errorMessage={formState.errors.type?.message}
+                    />
+                  )}
+                  name="type"
+                />
+              </View>
+            )}
             <View>
               <Controller
                 control={control}

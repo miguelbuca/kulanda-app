@@ -14,13 +14,13 @@ export default function PrivateLayout() {
         <Stack.Screen
           name="create"
           options={{
-            title: "Criar emolumentos",
+            title: "Criar disconto",
           }}
         />
         <Stack.Screen
           name="[slug]"
           options={{
-            title: "Editar emolumentos",
+            title: "Editar disconto",
           }}
         />
       </Stack>

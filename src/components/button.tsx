@@ -12,17 +12,21 @@ export const Button = ({
   children,
   className,
   ...props
-}: TouchableOpacityProps & {isLoading?: boolean}) => {
+}: TouchableOpacityProps & { isLoading?: boolean }) => {
   return (
-    <TouchableOpacity {...props}>
+    <TouchableOpacity disabled={isLoading} {...props}>
       <View
         className={`bg-primary-500 h-14 py-3 w-full flex items-center justify-center rounded-xl ${className}`}
       >
-        {!isLoading ? (typeof children === "string" ? (
-          <Text className="font-bold text-white text-base">{children}</Text>
+        {!isLoading ? (
+          typeof children === "string" ? (
+            <Text className="font-bold text-white text-base">{children}</Text>
+          ) : (
+            children
+          )
         ) : (
-          children
-        )):(<ActivityIndicator size={"small"} color={'#ffffff'} />)}
+          <ActivityIndicator size={"small"} color={"#ffffff"} />
+        )}
       </View>
     </TouchableOpacity>
   );

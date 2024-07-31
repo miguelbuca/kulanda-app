@@ -53,6 +53,10 @@ const Main = () => {
     useState<SwitchServiceOrProducType>("PRODUCT");
   const [name, setName] = useState("");
 
+  const [filter, setFilter] = useState<FilterProductInput | FilterServiceInput>(
+    {}
+  );
+
   const navigation = useNavigation();
   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -63,13 +67,22 @@ const Main = () => {
     []
   );
 
-  const filter: FilterProductInput | FilterServiceInput = useMemo(() => {
-    return {
+  const handleFilter = useCallback(() => {
+    setFilter({
       categoryId: selectedCategory?.id,
       name,
-    };
-  }, [selectedCategory, name]);
+    });
+  }, [name, selectedCategory]);
 
+  useEffect(() => {
+    handleFilter();
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    if (name === "") {
+      handleFilter();
+    }
+  }, [name]);
 
   useEffect(() => {
     if (type === "PHONE") {
@@ -139,9 +152,12 @@ const Main = () => {
                 />
               </View>
               <View className="ml-3">
-                <Button className="flex items-center justify-center p-3 h-auto bg-white shadow-sm">
+                <Button
+                  onPress={handleFilter}
+                  className="flex items-center justify-center p-3 h-auto bg-white shadow-sm"
+                >
                   <Ionicons
-                    name="options-outline"
+                    name="search-outline"
                     color={theme.extend.colors.primary[500]}
                     size={25}
                   />
@@ -184,9 +200,12 @@ const Main = () => {
               />
             </View>
             <View className="ml-3">
-              <Button className="flex items-center justify-center p-3 h-auto bg-white shadow-sm">
+              <Button
+                onPress={handleFilter}
+                className="flex items-center justify-center p-3 h-auto bg-white shadow-sm"
+              >
                 <Ionicons
-                  name="options-outline"
+                  name="search-outline"
                   color={theme.extend.colors.primary[500]}
                   size={25}
                 />

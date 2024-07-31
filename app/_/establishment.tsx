@@ -56,9 +56,9 @@ const Switch = () => {
           company?.id ? (
             <>
               <View className="flex flex-col items-center justify-center my-8 self-center">
-                <View className="mb-3">
+                <View className="mb-3 p-3 bg-white rounded-full overflow-hidden">
                   <Image
-                    className="h-24 w-24 rounded-full"
+                    className="h-24 w-24"
                     resizeMode="stretch"
                     source={{
                       uri: company?.logo,

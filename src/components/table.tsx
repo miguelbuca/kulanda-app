@@ -4,6 +4,7 @@ import {
   FlatList,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import React, { ReactNode, useMemo, useState } from "react";
 import { DocumentNode, OperationVariables, useQuery } from "@apollo/client";
@@ -13,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useStore } from "../hooks/use-store";
 import { Input } from "./input";
 import { useDevice } from "../hooks/use-device";
+import { theme } from "@/tailwind.config";
 
 export interface TableProps {
   name?: string;
@@ -24,6 +26,7 @@ export interface TableProps {
   canDeleteRow?: boolean;
   withSearch?: string;
   withPrint?: boolean;
+  isValidRow?(value: any): boolean;
   onEventHandler?(type: "edit" | "delete" | "print", value: any): void;
   renderCell?: {
     [Symbol in string]: (value: any, item?: any) => ReactNode;
@@ -43,6 +46,7 @@ export const Table = <T,>({
   renderCell,
   renderColumn,
   limit = 3,
+  isValidRow,
   onEventHandler,
 }: TableProps) => {
   const { store } = useStore();
@@ -64,7 +68,7 @@ export const Table = <T,>({
     return vrbls;
   }, [store, withSearch, searchFor]);
 
-  const { data, error } = useQuery(document, {
+  const { data, error, loading } = useQuery(document, {
     client: client,
     variables: {
       ...variables,
@@ -81,9 +85,10 @@ export const Table = <T,>({
       const columns: string[] = Object.keys(items?.[0] as object).filter(
         (key) => !allExcluded?.includes(key)
       );
+
       return {
         columns,
-        items,
+        items: isValidRow ? items.filter((item) => isValidRow(item)) : items,
       };
     } catch (error) {
       return {
@@ -91,7 +96,7 @@ export const Table = <T,>({
         columns: [],
       };
     }
-  }, [data, error, excludColumns]);
+  }, [data, error, excludColumns, isValidRow]);
 
   return (
     <>
@@ -117,7 +122,7 @@ export const Table = <T,>({
           )}
         </View>
       </View>
-      {items.length > 0 ? (
+      {items.length > 0 && !loading ? (
         <View className="mt-4">
           <View className="flex flex-row bg-gray-100 rounded-lg">
             {columns.map((column, index) =>
@@ -245,7 +250,14 @@ export const Table = <T,>({
         </View>
       ) : (
         <View className="flex justify-center items-center mt-3 p-3 bg-gray-100 rounded-lg">
-          <Text className="text-gray-400">Não há registros</Text>
+          {loading ? (
+            <ActivityIndicator
+              size={"small"}
+              color={theme.extend.colors.primary[500]}
+            />
+          ) : (
+            <Text className="text-gray-400">Não há registros</Text>
+          )}
         </View>
       )}
     </>

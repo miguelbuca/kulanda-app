@@ -1,4 +1,10 @@
-import { View, Text, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { GET_SERVICES_BY_STORE } from "../graphql/queries";
@@ -7,6 +13,7 @@ import { client } from "../api/client";
 import { formatMoney } from "../utils/format-money";
 import { useOrder } from "../hooks/use-order";
 import { useDevice } from "../hooks/use-device";
+import { theme } from "@/tailwind.config";
 
 export interface ServicesProps {
   filter?: FilterServiceInput;
@@ -18,12 +25,13 @@ export const Services = ({ filter }: ServicesProps) => {
   const { addItem, qtd } = useOrder();
   const { type } = useDevice();
 
-  useQuery(GET_SERVICES_BY_STORE, {
+  const { loading } = useQuery(GET_SERVICES_BY_STORE, {
     client: client,
     variables: {
       storeId: store.id,
       filter,
     },
+    fetchPolicy: "cache-and-network",
     onCompleted: ({ getServices }) => {
       setData(getServices);
     },
@@ -31,6 +39,20 @@ export const Services = ({ filter }: ServicesProps) => {
       console.log(error.message);
     },
   });
+
+  if (loading)
+    return (
+      <View
+        className={`absolute h-full w-full ${
+          type !== "PHONE" ? "px-10 gap-3" : "px-4 gap-2"
+        } py-5 pb-24`}
+      >
+        <ActivityIndicator
+          size={"small"}
+          color={theme.extend.colors.primary[500]}
+        />
+      </View>
+    );
 
   return (
     <View

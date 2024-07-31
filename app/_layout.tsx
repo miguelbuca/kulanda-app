@@ -10,6 +10,9 @@ import { Platform, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import "react-native-reanimated";
 
+import * as Font from "expo-font";
+import { Ionicons, Feather } from "@expo/vector-icons";
+
 NativeWindStyleSheet.setOutput({
   default: "native",
 });
@@ -27,6 +30,17 @@ export default function RootLayout() {
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     ...FontAwesome.font,
   });
+
+  async function loadResources() {
+    await Font.loadAsync({
+      ...Ionicons.font,
+      ...Feather.font,
+    });
+  }
+
+  useEffect(() => {
+    loadResources();
+  }, []);
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {

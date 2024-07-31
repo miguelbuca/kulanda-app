@@ -5,7 +5,7 @@ import { ChargeForm } from "@/src/components";
 const Add = () => {
   return (
     <View className="flex-1 bg-gray-50 p-6">
-      <ChargeForm type='fee' />
+      <ChargeForm type='discont' />
     </View>
   );
 };
