@@ -14,18 +14,23 @@ import { CREATE_PRODUCT } from "../graphql/mutations";
 import { client } from "../api/client";
 import { useRouter } from "expo-router";
 import { useStore } from "../hooks/use-store";
-import {
-  GET_CATEGORIES_BY_STORE,
-  GET_PRODUCT_BY_ID,
-} from "../graphql/queries";
+import { GET_CATEGORIES_BY_STORE, GET_PRODUCT_BY_ID } from "../graphql/queries";
 import { AvatarDinamic } from "./avatar-dinamic";
+import { generateRNFile } from "../utils/rn-file-generate";
 
 const schema = z.object({
   name: z.string().min(2, "Nome is too short. Minimal length is 4 characters"),
   description: z.string().optional(),
-  image: z.string().optional(),
+  image: z
+    .object({
+      fileName: z.string(),
+      height: z.number(),
+      mimeType: z.string(),
+      uri: z.string(),
+      width: z.number(),
+    })
+    .optional(),
   price: z.number(),
-  stock: z.number(),
   expiresOn: z.date(),
   charges: z.string().optional(),
   categoryId: z.string(),
@@ -73,22 +78,32 @@ export const ProductForm = ({ productId }: ProductFormProps) => {
   });
 
   const handleSaveTenant = useCallback(
-    (values: z.infer<typeof schema>) => {
-      if (!productId)
+    ({ image: file, ...values }: any) => {
+      values["image"] = generateRNFile(
+        file?.uri,
+        file?.fileName,
+        file?.mimeType
+      );
+
+      if (!productId) {
         createProduct({
           variables: {
-            ...values,
+            ...values, // Envia o FormData como variável
             storeId: store.id,
           },
         });
-      else {
+      } else {
         console.log("edit with: ", values);
       }
     },
     [createProduct, route, store, productId]
   );
 
-  const { control, handleSubmit } = useForm<z.infer<typeof schema>>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof schema>>({
     values: {
       ...product,
     } as any,
@@ -113,9 +128,9 @@ export const ProductForm = ({ productId }: ProductFormProps) => {
           control={control}
           render={({ field: { onChange, value } }) => (
             <AvatarDinamic
-              image={value}
+              image={value?.uri}
               withUpload
-              onUpload={(asset) => onChange(asset?.uri)}
+              onUpload={(asset) => onChange(asset)}
             />
           )}
           name="image"
@@ -174,25 +189,10 @@ export const ProductForm = ({ productId }: ProductFormProps) => {
               />
             </View>
           </View>
+
           <View
             className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
           >
-            <View>
-              <Controller
-                control={control}
-                render={({ field: { onChange, onBlur, value }, formState }) => (
-                  <Input
-                    value={value?.toString?.()}
-                    placeholder="Quantidade em estoque"
-                    onChangeText={(value) => onChange(Number(value))}
-                    onBlur={onBlur}
-                    keyboardType="numeric"
-                    errorMessage={formState.errors.stock?.message}
-                  />
-                )}
-                name="stock"
-              />
-            </View>
             <View>
               <Controller
                 control={control}
@@ -212,11 +212,6 @@ export const ProductForm = ({ productId }: ProductFormProps) => {
                 name="categoryId"
               />
             </View>
-          </View>
-
-          <View
-            className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
-          >
             <View>
               <Controller
                 control={control}

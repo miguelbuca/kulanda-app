@@ -33,14 +33,8 @@ export const Order = ({ onClose }: OrderProps) => {
       <View className={type === "PHONE" ? "mt-0" : "mt-6"}>
         <View className="flex items-center flex-row p-6">
           <View className="flex-1">
-            <Text className="font-bold capitalize text-lg">Pedidos atuais</Text>
+            <Text className="font-bold text-lg">Pedidos atuais</Text>
           </View>
-          <TouchableOpacity onPress={() => console.log("proforma")}>
-            <View className="flex flex-row items-center justify-center p-2 bg-gray-100 rounded-lg">
-              <Text className="font-normal ml-1">Proforma </Text>
-              <Ionicons name="print-outline" size={22} />
-            </View>
-          </TouchableOpacity>
         </View>
       </View>
       <View className="flex-1 px-6">

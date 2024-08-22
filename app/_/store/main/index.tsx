@@ -154,7 +154,7 @@ const Main = () => {
               <View className="ml-3">
                 <Button
                   onPress={handleFilter}
-                  className="flex items-center justify-center p-3 h-auto bg-white shadow-sm"
+                  className="flex items-center w-[60px] justify-center h-auto bg-white shadow-sm"
                 >
                   <Ionicons
                     name="search-outline"
@@ -202,7 +202,7 @@ const Main = () => {
             <View className="ml-3">
               <Button
                 onPress={handleFilter}
-                className="flex items-center justify-center p-3 h-auto bg-white shadow-sm"
+                className="flex items-center w-[60px] justify-center h-auto bg-white shadow-sm"
               >
                 <Ionicons
                   name="search-outline"

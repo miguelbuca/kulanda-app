@@ -1,8 +1,9 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useDevice } from "../hooks/use-device";
+import { useStore } from "../hooks/use-store";
 
-export type SwitchServiceOrProducType = "PRODUCT" | "SERVICE";
+export type SwitchServiceOrProducType = "PRODUCT" | "SERVICE" | "DEFAULT";
 
 export interface SwitchServiceOrProductProps {
   onTypeChange?: (value: SwitchServiceOrProducType) => void;
@@ -11,14 +12,24 @@ export interface SwitchServiceOrProductProps {
 export const SwitchServiceOrProduct = ({
   onTypeChange,
 }: SwitchServiceOrProductProps) => {
-  const { type: device } = useDevice()
-  const [type, setType] = useState<SwitchServiceOrProducType>("PRODUCT");
+  const { type: device } = useDevice();
+  const { store } = useStore();
+  const [type, setType] = useState<SwitchServiceOrProducType>(
+    store.saleType ?? "DEFAULT"
+  );
 
   useEffect(() => {
     onTypeChange?.(type);
   }, [type]);
+
+  if (store.saleType !== "DEFAULT") return null;
+
   return (
-    <View className={`flex flex-row w-[200px]  rounded-[100px] p-2 ${device === 'PHONE' ? 'bg-white shadow-lg' : 'bg-white shadow-sm'}`}>
+    <View
+      className={`flex flex-row w-[200px]  rounded-[100px] p-2 ${
+        device === "PHONE" ? "bg-white shadow-lg" : "bg-white shadow-sm"
+      }`}
+    >
       <TouchableOpacity
         style={{
           flex: 1,

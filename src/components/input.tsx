@@ -5,6 +5,7 @@ import {
   TextInputProps,
   ViewProps,
   Pressable,
+  Platform,
 } from "react-native";
 import React, { FC, useEffect, useRef, useState } from "react";
 import CurrencyInput, { CurrencyInputProps } from "react-native-currency-input";
@@ -112,7 +113,7 @@ export const InputDataPicker = ({
     hideDatePicker();
   };
 
-  return (
+  return Platform.OS !== "web" ? (
     <View className="my-2">
       <Pressable
         onPress={showDatePicker}
@@ -130,21 +131,39 @@ export const InputDataPicker = ({
             </Text>
           </View>
         ) : null}
-       { <RNDateTimePicker
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-          collapsable={false}
-          {...args}
-          themeVariant={colorScheme}
-          isVisible={isDatePickerVisible}
-          mode="date"
-          onConfirm={handleConfirm}
-          onCancel={hideDatePicker}
-        />}
+        {
+          <RNDateTimePicker
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            collapsable={false}
+            {...args}
+            themeVariant={colorScheme}
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
+        }
       </Pressable>
+      {errorMessage && (
+        <Text className="text-red-600 text-[10px] my-2">{errorMessage}</Text>
+      )}
+    </View>
+  ) : (
+    <View className="mt-2">
+      <input
+        value={value?.toISOString()?.split("T")?.[0]}
+        style={{
+          border: errorMessage
+            ? "solid 1px rgb(220 38 38)"
+            : "solid 1px transparent",
+        }}
+        onChange={(e) => onChange?.(new Date(e.target.value))}
+        type="date"
+      />
       {errorMessage && (
         <Text className="text-red-600 text-[10px] my-2">{errorMessage}</Text>
       )}

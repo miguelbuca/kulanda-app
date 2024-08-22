@@ -124,16 +124,32 @@ export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
                   <Select
                     value={value}
                     placeholder="Tipo (nenhum)"
-                    items={[
-                      {
-                        label: "Produto",
-                        value: "PRODUCT",
-                      },
-                      {
-                        label: "Serviço",
-                        value: "SERVICE",
-                      },
-                    ]}
+                    items={
+                      store.saleType === "DEFAULT"
+                        ? [
+                            {
+                              label: "Produto",
+                              value: "PRODUCT",
+                            },
+                            {
+                              label: "Serviço",
+                              value: "SERVICE",
+                            },
+                          ]
+                        : store.saleType === "PRODUCT"
+                        ? [
+                            {
+                              label: "Produto",
+                              value: "PRODUCT",
+                            },
+                          ]
+                        : [
+                            {
+                              label: "Serviço",
+                              value: "SERVICE",
+                            },
+                          ]
+                    }
                     onValueChange={onChange}
                     errorMessage={formState.errors.type?.message}
                   />
@@ -158,7 +174,7 @@ export const CategoryForm = ({ categoryId }: CategoryFormProps) => {
                     multiline
                     style={{
                       height: 110,
-                      paddingVertical: 19
+                      paddingVertical: 19,
                     }}
                   />
                 )}

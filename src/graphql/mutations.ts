@@ -9,28 +9,46 @@ export const SIGN_IN = gql`
 `;
 
 export const CREATE_SALE = gql`
-  mutation CreateSale(
-    $change: Float
-    $cash: Float
-    $bankCard: Float
-    $totalPrice: Float
-    $orders: [CreateOrderSaleInput!]!
-    $clientId: ID
+  mutation CreateSale($orders: [CreateOrderSaleInput!]!, $clientId: ID) {
+    createSale(orders: $orders, clientId: $clientId) {
+      id
+    }
+  }
+`;
+
+export const CREATE_INVOICE = gql`
+  mutation CreateInvoice(
+    $amount: Int!
+    $saleId: ID!
+    $digitalSignature: String!
+    $status: InvoiceEnumType!
   ) {
-    createSale(
-      change: $change
-      cash: $cash
-      bankCard: $bankCard
-      totalPrice: $totalPrice
-      orders: $orders
-      clientId: $clientId
+    createInvoice(
+      amount: $amount
+      saleId: $saleId
+      digitalSignature: $digitalSignature
+      status: $status
     ) {
       id
-      change
-      cash
-      bankCard
-      totalPrice
-      createdAt
+      status
+    }
+  }
+`;
+
+export const CREATE_RECEIPT = gql`
+  mutation CreateReceipt(
+    $digitalSignature: String!
+    $invoiceId: ID!
+    $status: ReceiptEnumType! = ISSUED
+    $payments: [ReceiptPaymentInput!]!
+  ) {
+    createReceipt(
+      payments: $payments
+      invoiceId: $invoiceId
+      digitalSignature: $digitalSignature
+      status: $status
+    ) {
+      id
     }
   }
 `;
@@ -85,6 +103,32 @@ export const CREATE_CLIENT = gql`
   }
 `;
 
+export const CREATE_SUPPLIER = gql`
+  mutation CreateSupplier(
+    $fullName: String!
+    $nif: String
+    $phone: String!
+    $email: String
+    $address: String!
+    $type: SupplierEnumType = INDIVIDUAL
+    $caeId: ID
+    $storeId: ID
+  ) {
+    createSupplier(
+      fullName: $fullName
+      nif: $nif
+      phone: $phone
+      email: $email
+      address: $address
+      type: $type
+      caeId: $caeId
+      storeId: $storeId
+    ) {
+      id
+    }
+  }
+`;
+
 export const CREATE_CATEGORY = gql`
   mutation CreateCategory(
     $name: String!
@@ -121,12 +165,12 @@ export const CREATE_PRODUCT = gql`
   mutation CreateProduct(
     $name: String!
     $description: String
-    $image: String
+    $image: Upload
     $price: Float!
-    $stock: Int
     $expiresOn: DateTime!
     $categoryId: ID!
     $charges: [ID!] = []
+    $suppliers: [ProductSupplierInput!] = []
     $storeId: ID!
   ) {
     createProduct(
@@ -134,10 +178,10 @@ export const CREATE_PRODUCT = gql`
       description: $description
       image: $image
       price: $price
-      stock: $stock
       expiresOn: $expiresOn
       categoryId: $categoryId
       charges: $charges
+      suppliers: $suppliers
       storeId: $storeId
     ) {
       id

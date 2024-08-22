@@ -22,7 +22,7 @@ export const Button = ({
           typeof children === "string" ? (
             <Text className="font-bold text-white text-base">{children}</Text>
           ) : (
-            children
+            <View className="mx-5">{children}</View>
           )
         ) : (
           <ActivityIndicator size={"small"} color={"#ffffff"} />

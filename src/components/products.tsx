@@ -14,6 +14,7 @@ import { formatMoney } from "../utils/format-money";
 import { useOrder } from "../hooks/use-order";
 import { useDevice } from "../hooks/use-device";
 import { theme } from "@/tailwind.config";
+import { getApiFile } from "../utils/get-api-file";
 
 export interface ProductsProps {
   filter?: FilterProductInput;
@@ -91,7 +92,7 @@ export const Products = ({ filter }: ProductsProps) => {
               <Image
                 className="h-full w-full rounded-md"
                 source={{
-                  uri: item.image,
+                  uri: getApiFile(item.image ?? ""),
                 }}
               />
             </View>

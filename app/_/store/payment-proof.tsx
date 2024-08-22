@@ -7,7 +7,7 @@ import { Button } from "@/src/components";
 import * as Print from "expo-print";
 import { Receipt } from "@/src/templates";
 
-const PaymentStatus = () => {
+const PaymentProof = () => {
   const { lastSale } = useOrder();
 
   const print = async () => {
@@ -30,4 +30,4 @@ const PaymentStatus = () => {
   );
 };
 
-export default PaymentStatus;
+export default PaymentProof;

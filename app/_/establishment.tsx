@@ -56,14 +56,18 @@ const Switch = () => {
           company?.id ? (
             <>
               <View className="flex flex-col items-center justify-center my-8 self-center">
-                <View className="mb-3 p-3 bg-white rounded-full overflow-hidden">
-                  <Image
-                    className="h-24 w-24"
-                    resizeMode="stretch"
-                    source={{
-                      uri: company?.logo,
-                    }}
-                  />
+                <View className="mb-3 bg-white rounded-full overflow-hidden p-6">
+                  {company?.logo ? (
+                    <Image
+                      className="h-24 w-24 "
+                      resizeMode="stretch"
+                      source={{
+                        uri: company?.logo,
+                      }}
+                    />
+                  ) : (
+                    <Ionicons name="storefront" size={96} color={"#ddd"} />
+                  )}
                 </View>
                 <Text className="text-base font-semibold text-primary-500">
                   {company?.name}

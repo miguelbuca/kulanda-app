@@ -1,10 +1,19 @@
+// Scalars
+type DateTime = string;
 type ID = string;
-type DateTime = string; // Assume a string in ISO 8601 format
+type Upload = File;
 
+// Enums
 enum AccessEnumType {
   SELLER = "SELLER",
   OWNER = "OWNER",
   MANAGER = "MANAGER",
+}
+
+enum StoreSaleEnumType {
+  DEFAULT = "DEFAULT",
+  PRODUCT = "PRODUCT",
+  SERVICE = "SERVICE",
 }
 
 enum CategoryEnumType {
@@ -18,6 +27,36 @@ enum ChargeEnumType {
   DISCOUNT = "DISCOUNT",
 }
 
+enum ClientEnumType {
+  INDIVIDUAL = "INDIVIDUAL",
+  LEGAL = "LEGAL",
+}
+
+enum InvoiceEnumType {
+  DRAFT = "DRAFT",
+  ISSUED = "ISSUED",
+  PAID = "PAID",
+  OVERDUE = "OVERDUE",
+  CANCELLED = "CANCELLED",
+}
+
+enum ReceiptEnumType {
+  ISSUED = "ISSUED",
+  PAID = "PAID",
+}
+
+enum CreditNoteEnumType {
+  DRAFT = "DRAFT",
+  ISSUED = "ISSUED",
+  APPLIED = "APPLIED",
+  CANCELLED = "CANCELLED",
+}
+
+enum SupplierEnumType {
+  INDIVIDUAL = "INDIVIDUAL",
+  LEGAL = "LEGAL",
+}
+
 enum PeriodReportStoreOptionsEnumType {
   DAY = "DAY",
   WEEK = "WEEK",
@@ -25,11 +64,7 @@ enum PeriodReportStoreOptionsEnumType {
   YEAR = "YEAR",
 }
 
-enum ClientEnumType {
-  INDIVIDUAL = "INDIVIDUAL",
-  LEGAL = "LEGAL",
-}
-
+// Types
 type UserType = {
   id: ID;
   fullName: string;
@@ -52,6 +87,7 @@ type StoreType = {
   designation: string;
   phone: string;
   globalSale?: string;
+  saleType?: keyof typeof StoreSaleEnumType;
   createdAt: DateTime;
   updatedAt: DateTime;
   products: ProductType[];
@@ -62,8 +98,8 @@ type StoreType = {
 type OrderType = {
   id: ID;
   saleId: ID;
-  productId: ID;
-  serviceId: ID;
+  productId?: ID;
+  serviceId?: ID;
   createdAt: DateTime;
   updatedAt: DateTime;
   products: ProductType[];
@@ -76,13 +112,14 @@ type SaleType = {
   code: number;
   cash?: number;
   bankCard?: number;
-  totalPrice?: number;
+  totalPrice: number;
   sellerId: ID;
   clientId: ID;
   createdAt: DateTime;
   updatedAt: DateTime;
   orders: OrderType[];
   seller?: UserType;
+  client?: ClientType;
 };
 
 type ReportStoreType = {
@@ -100,6 +137,7 @@ type CompanyType = {
   logo: string;
   caeId: ID;
   stores: StoreType[];
+  saftExportDate?: DateTime;
   createdAt: DateTime;
   updatedAt: DateTime;
   cae: CAEType;
@@ -121,7 +159,6 @@ type ProductType = {
   description?: string;
   image?: string;
   price: number;
-  stock?: number;
   expiresOn: DateTime;
   categoryId: ID;
   storeId: ID;
@@ -169,17 +206,6 @@ type ServiceType = {
   charges: ChargeType[];
 };
 
-type SectorType = {
-  id: ID;
-  name: string;
-  createdAt: DateTime;
-  updatedAt: DateTime;
-};
-
-type TenantCredentialsType = {
-  access_key: string;
-};
-
 type ClientType = {
   id: ID;
   fullName: string;
@@ -194,6 +220,68 @@ type ClientType = {
   updatedAt: DateTime;
 };
 
+type SectorType = {
+  id: ID;
+  name: string;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+};
+
+type TenantCredentialsType = {
+  access_key: string;
+};
+
+type InvoiceType = {
+  id: ID;
+  number: number;
+  amount: number;
+  saleId: ID;
+  digitalSignature: string;
+  status: keyof typeof InvoiceEnumType;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+  sale: SaleType;
+};
+
+type ReceiptType = {
+  id: ID;
+  amount: number;
+  number: number;
+  digitalSignature: number;
+  invoiceId: ID;
+  status: ReceiptEnumType;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+  invoice: InvoiceType;
+};
+
+type CreditNoteType = {
+  id: ID;
+  number: number;
+  amount: number;
+  digitalSignature: string;
+  invoiceId: ID;
+  status: CreditNoteEnumType;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+  invoid: SaleType;
+};
+
+type SupplierType = {
+  id: ID;
+  fullName: string;
+  nif?: string;
+  phone: string;
+  email?: string;
+  address: string;
+  type?: SupplierEnumType;
+  storeId?: ID;
+  caeId?: ID;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+};
+
+// Inputs
 type ReportStoreOptionsInput = {
   period?: PeriodReportStoreOptionsEnumType;
   from?: DateTime;
@@ -223,7 +311,7 @@ type FilterServicePaginateInput = {
 };
 
 type FilterClientInput = {
-  storeId?: ID;
+  storeId?: string;
   fullName?: string;
   email?: string;
   phone?: string;
@@ -235,15 +323,34 @@ type FilterClientPaginateInput = {
   limit?: number;
 };
 
+type FilterSupplierInput = {
+  storeId?: string;
+  fullName?: string;
+  email?: string;
+  phone?: string;
+  paginate?: FilterSupplierPaginateInput;
+};
+
+type FilterSupplierPaginateInput = {
+  page?: number;
+  limit?: number;
+};
+
 type CreateOrderSaleInput = {
   productId?: ID;
   serviceId?: ID;
+};
+
+type ProductSupplierInput = {
+  supplierId: ID;
+  quantity: number;
 };
 
 type CreateCompanyInput = {
   nif: string;
   name: string;
   address: string;
-  logo?: string;
+  logo?: Upload;
   caeId: ID;
+  saftExportDate?: DateTime;
 };

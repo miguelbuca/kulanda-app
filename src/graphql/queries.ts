@@ -43,6 +43,7 @@ export const GET_COMPANY = gql`
         designation
         address
         phone
+        saleType
       }
     }
   }
@@ -55,6 +56,7 @@ export const GET_STORE = gql`
       address
       designation
       phone
+      saleType
     }
   }
 `;
@@ -78,7 +80,14 @@ export const GET_PRODUCTS_BY_STORE = gql`
       image
       description
       price
-      stock
+      stock {
+        id
+        quantity
+        supplier {
+          id
+          fullName
+        }
+      }
       category {
         type
       }
@@ -135,10 +144,6 @@ export const GET_SALE_BY_ID = gql`
   query GetSale($id: ID!) {
     getSale(id: $id) {
       id
-      change
-      cash
-      bankCard
-      totalPrice
       seller {
         id
         fullName
@@ -253,9 +258,37 @@ export const GET_CLIENTS = gql`
   }
 `;
 
+export const GET_SUPPLIERS = gql`
+  query GetSuppliers($filter: FilterSupplierInput) {
+    getSuppliers(filter: $filter) {
+      id
+      fullName
+      nif
+      phone
+      email
+      address
+      type
+    }
+  }
+`;
+
 export const GET_CLIENT_BY_ID = gql`
   query GetClient($id: ID!) {
     getClient(id: $id) {
+      id
+      fullName
+      nif
+      phone
+      email
+      address
+      type
+    }
+  }
+`;
+
+export const GET_SUPPLIER_BY_ID = gql`
+  query GetSupplier($id: ID!) {
+    getSupplier(id: $id) {
       id
       fullName
       nif
@@ -275,11 +308,6 @@ export const GET_SALE_BY_STORE = gql`
         fullName
       }
       id
-      change
-      cash
-      bankCard
-      totalPrice
-      code
       seller {
         id
         fullName
@@ -363,9 +391,16 @@ export const GET_PRODUCT_BY_ID = gql`
       image
       description
       price
-      stock
       categoryId
       expiresOn
+      stock {
+        id
+        quantity
+        supplier {
+          id
+          fullName
+        }
+      }
       charges {
         id
         name

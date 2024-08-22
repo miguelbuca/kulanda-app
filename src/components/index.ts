@@ -18,4 +18,4 @@ export * from "./product-form";
 export * from "./avatar-dinamic";
 export * from "./service-form";
 export * from "./switch-service-or-product";
-export * from "./button-card";
+export * from "./supplier-form"

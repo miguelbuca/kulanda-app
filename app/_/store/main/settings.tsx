@@ -7,6 +7,7 @@ import {
   GET_PRODUCTS_BY_STORE,
   GET_SALE_BY_STORE,
   GET_SERVICES_BY_STORE,
+  GET_SUPPLIERS,
   GET_USERS,
 } from "@/src/graphql/queries";
 import { useDevice } from "@/src/hooks/use-device";
@@ -18,6 +19,9 @@ import * as Linking from "expo-linking";
 import { Barcode } from "expo-barcode-generator";
 import { useRouter } from "expo-router";
 import { useAuth } from "@/src/hooks/use-auth";
+import { useStore } from "@/src/hooks/use-store";
+import { getApiFile } from "@/src/utils/get-api-file";
+import { getStock } from "@/src/utils/product";
 
 interface TablePropsList
   extends TableProps,
@@ -27,6 +31,8 @@ const Settings = () => {
   const { type } = useDevice();
   const route = useRouter();
   const { user } = useAuth();
+
+  const { store } = useStore();
 
   const tables: TablePropsList[] = [
     {
@@ -98,6 +104,64 @@ const Settings = () => {
         switch (type) {
           case "edit":
             route.push("_/store/customer/" + value.id);
+            break;
+
+          default:
+            break;
+        }
+      },
+      renderCell: {
+        phone: (value) => {
+          return (
+            <TouchableOpacity
+              onPress={() =>
+                Linking.openURL(
+                  "tel:" + parsePhoneNumber(value).formatInternational()
+                )
+              }
+            >
+              <View className="flex flex-row">
+                <Feather name="external-link" size={10} />
+                <Text className="flex text-[10px] ml-1">
+                  {parsePhoneNumber(value).formatInternational()}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        },
+        email: (value) => {
+          return (
+            <TouchableOpacity
+              onPress={() => Linking.openURL("mailto:" + value)}
+            >
+              <View className="flex flex-row">
+                <Feather name="external-link" size={10} />
+                <Text className="flex text-[10px] ml-1">{value}</Text>
+              </View>
+            </TouchableOpacity>
+          );
+        },
+      },
+      renderColumn: {
+        fullName: () => "Nome completo",
+        phone: () => "Telemóvel",
+        email: () => "E-mail",
+        access: () => "Accesso",
+        type: () => "Tipo de pessoa",
+        address: () => "Endereço",
+      },
+    },
+    {
+      name: "Fornecedores",
+      document: GET_SUPPLIERS,
+      withAddEvent() {
+        route.push("_/store/supplier/create");
+      },
+      withSearch: "fullName",
+      onEventHandler(type, value: UserType) {
+        switch (type) {
+          case "edit":
+            route.push("_/store/supplier/" + value.id);
             break;
 
           default:
@@ -218,7 +282,7 @@ const Settings = () => {
               className="w-10 h-10 rounded-xl"
               resizeMode="stretch"
               source={{
-                uri: value,
+                uri: getApiFile(value),
               }}
             />
           );
@@ -226,7 +290,8 @@ const Settings = () => {
         price: (value) => {
           return formatMoney(Number(value));
         },
-        stock: (value) => {
+        stock: (stock) => {
+          const value = getStock(stock);
           return (
             <Text
               className={`text-xs font-bold ${
@@ -272,7 +337,7 @@ const Settings = () => {
               className="w-10 h-10 rounded-xl"
               resizeMode="stretch"
               source={{
-                uri: value,
+                uri: getApiFile(value),
               }}
             />
           );
@@ -327,7 +392,7 @@ const Settings = () => {
       },
     },
     {
-      name: "Faturas",
+      name: "Vendas",
       document: GET_SALE_BY_STORE,
       withAddEvent() {
         route.push("_/store/main");
@@ -405,6 +470,16 @@ const Settings = () => {
           );
         },
       },
+      onEventHandler(type, value) {
+        switch (type) {
+          case "print":
+            route.push("_/store/invoice/" + value.id);
+            break;
+
+          default:
+            break;
+        }
+      },
       renderColumn: {
         client: () => "Cliente",
         change: () => "Troco",
@@ -420,8 +495,13 @@ const Settings = () => {
   return (
     <FlatList
       className="flex-1 p-6 bg-gray-50 pb-8"
-      data={tables}
-      ListFooterComponent={() => <View className="flex flex-col"></View>}
+      data={tables.filter((item) => {
+        if (item.name === "Produtos" && store.saleType === "SERVICE")
+          return false;
+        if (item.name === "Serviços" && store.saleType === "PRODUCT")
+          return false;
+        return true;
+      })}
       renderItem={({ item, index }) => (
         <>
           <Accordion

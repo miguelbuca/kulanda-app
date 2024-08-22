@@ -11,6 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import { AntDesign } from "@expo/vector-icons";
+import { getApiFile } from "../utils/get-api-file";
 
 export interface AvatarDinamicProps extends ViewProps {
   letters?: string;
@@ -73,7 +74,7 @@ export const AvatarDinamic = ({
             }
             className="h-36 w-36 rounded-lg"
             source={{
-              uri: image?.uri || defaultImage,
+              uri: image?.uri || getApiFile(defaultImage ?? ""),
             }}
           />
         ) : (
