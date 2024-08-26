@@ -4,6 +4,7 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  Platform,
 } from "react-native";
 import React, { useCallback, useMemo, useState } from "react";
 import { useOrder } from "@/src/hooks/use-order";
@@ -29,6 +30,8 @@ import { Controller, useForm } from "react-hook-form";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useProof } from "@/src/hooks/use-proof";
+import { useCompany } from "@/src/hooks/use-company";
 
 const schema = z.object({
   client: z.object({
@@ -66,8 +69,14 @@ const Payment = () => {
   const { type } = useDevice();
 
   const { store } = useStore();
+  const { company } = useCompany();
 
   const router = useRouter();
+
+  const { generateWebPDF } = useProof({
+    company,
+    store,
+  });
 
   const [createSale] = useMutation(CREATE_SALE, {
     client: client,
@@ -75,9 +84,6 @@ const Payment = () => {
 
   const [createReceipt] = useMutation(CREATE_RECEIPT, {
     client: client,
-    onCompleted({ createReceipt }) {
-      router.push("payment-proof/" + createReceipt.invoiceId);
-    },
   });
 
   const [createInvoice] = useMutation(CREATE_INVOICE, {
@@ -91,8 +97,11 @@ const Payment = () => {
             payments,
           },
         });
-      } else {
-        router.push("payment-proof/" + createInvoice.id);
+      }
+      if (Platform.OS === "web") {
+        generateWebPDF(createInvoice.id);
+        reset();
+        router.back();
       }
     },
   });
@@ -439,10 +448,7 @@ const Payment = () => {
                 <View className="flex flex-row items-center">
                   <Ionicons name="print-outline" size={25} color={"#ffffff"} />
                   <Text className="ml-4 font-semibold text-white text-base">
-                    Imprimir comprovativo -
-                    <Text className="ml-1 font-thin">
-                      {watch("state") !== "PAID" ? "Fatura" : "Recibo"}
-                    </Text>
+                    Imprimir comprovativo
                   </Text>
                 </View>
               </Button>

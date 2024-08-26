@@ -49,6 +49,7 @@ export const CREATE_RECEIPT = gql`
       status: $status
     ) {
       id
+      invoiceId
     }
   }
 `;

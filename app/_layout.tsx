@@ -8,7 +8,8 @@ import { NativeWindStyleSheet } from "nativewind";
 import { useEffect } from "react";
 import { Platform, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import "react-native-reanimated";
+import "react-native-reanimated"
+import "jspdf/dist/polyfills.es";
 
 import * as Font from "expo-font";
 import { Ionicons, Feather } from "@expo/vector-icons";

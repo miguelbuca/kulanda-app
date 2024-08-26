@@ -39,12 +39,6 @@ const StoreLayout = () => {
             headerShown: true,
           }}
         />
-        <Stack.Screen
-          name="payment-status"
-          options={{
-            headerShown: true,
-          }}
-        />
       </Stack>
     </View>
   );

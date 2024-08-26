@@ -1,14 +1,11 @@
-import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
+import { View, Text, SafeAreaView } from "react-native";
 import React from "react";
 import { formatMoney } from "../utils/format-money";
 import { Orders } from "./orders";
-import { Ionicons } from "@expo/vector-icons";
 import { useOrder } from "../hooks/use-order";
 import { useRouter } from "expo-router";
 import { Button } from "./button";
 import { useDevice } from "../hooks/use-device";
-import { useAssets } from "expo-asset";
-import { Image } from "expo-image";
 
 export interface OrderProps {
   onClose?(): void;

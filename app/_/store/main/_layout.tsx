@@ -104,7 +104,7 @@ const StoreLayout = () => {
                       <Image
                         className="h-7 w-7"
                         source={{
-                          uri: assets?.[0].uri,
+                          uri: assets?.[0]?.uri,
                         }}
                       />
                     </View>

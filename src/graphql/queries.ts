@@ -34,6 +34,7 @@ export const GET_COMPANY = gql`
       nif
       name
       logo
+      address
       cae {
         id
         name
@@ -443,6 +444,81 @@ export const GET_SERVICE_BY_ID = gql`
           name
           percentage
         }
+      }
+    }
+  }
+`;
+
+export const GET_INVOICE = gql`
+  query GetInvoice($id: ID!) {
+    getInvoice(id: $id) {
+      id
+      amount
+      status
+      number
+      createdAt
+      sale {
+        id
+        client {
+          id
+          nif
+          fullName
+          phone
+          type
+          address
+        }
+        seller {
+          id
+          fullName
+          phone
+        }
+        orders {
+          id
+          products {
+            id
+            price
+            name
+            category {
+              id
+              name
+              charges {
+                id
+                acronym
+                percentage
+              }
+            }
+            charges {
+              id
+              acronym
+              percentage
+            }
+          }
+          services {
+            id
+            price
+            name
+            category {
+              id
+              name
+              charges {
+                id
+                acronym
+                percentage
+              }
+            }
+            charges {
+              id
+              acronym
+              percentage
+            }
+          }
+        }
+      }
+      receipt {
+        id
+        status
+        amount
+        number
       }
     }
   }

@@ -208,7 +208,7 @@ export const useOrder = create<IOrder>((set) => ({
   },
 }));
 
-function calCharges(value: number, charges: ChargeType[]) {
+export function calCharges(value: number, charges: ChargeType[]) {
   let totalCharges = 0;
 
   charges.forEach((charge) => {
@@ -220,6 +220,43 @@ function calCharges(value: number, charges: ChargeType[]) {
   return totalCharges;
 }
 
-function calcPercentage(value: number, percentage: number) {
+export function totalCharges(charges: ChargeType[]) {
+  let totalCharges = 0;
+
+  charges.forEach((charge) => {
+    totalCharges += charge.percentage;
+  });
+
+  return totalCharges;
+}
+
+export function compactCharges(charges: ChargeType[]) {
+  let totalCharges: string[] = [];
+
+  charges.forEach((charge) => {
+    if (charge.type === "DISCONT") return;
+    totalCharges.push(
+      `${charge.acronym} (${Number(charge.percentage).toFixed(2)}%)`
+    );
+  });
+
+  return totalCharges;
+}
+
+export function compactDisconts(charges: ChargeType[]) {
+  let totalDisconts: string[] = [];
+
+  charges.forEach((charge) => {
+    if (charge.type !== "DISCONT") return;
+
+    totalDisconts.push(
+      `${charge.acronym} (${Number(charge.percentage).toFixed(2)}%)`
+    );
+  });
+
+  return totalDisconts;
+}
+
+export function calcPercentage(value: number, percentage: number) {
   return (value * percentage) / 100;
 }

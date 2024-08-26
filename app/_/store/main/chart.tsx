@@ -17,6 +17,7 @@ import { BarChart, barDataItem } from "react-native-gifted-charts";
 import { ColorGenerator } from "@/src/utils/color-generator";
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import { theme } from "@/tailwind.config";
+import { getApiFile } from "@/src/utils/get-api-file";
 
 const { width } = Dimensions.get("screen");
 
@@ -335,7 +336,7 @@ const Chart = () => {
                           <Image
                             className="h-full w-full rounded-md"
                             source={{
-                              uri: item.image,
+                              uri: getApiFile(item.image),
                             }}
                           />
                         </View>
@@ -382,7 +383,7 @@ const Chart = () => {
                           <Image
                             className="h-full w-full rounded-md"
                             source={{
-                              uri: item.image,
+                              uri: getApiFile(item.image),
                             }}
                           />
                         </View>
