@@ -1,5 +1,11 @@
 import React from "react";
-import { Accordion, AccordionProps, Table, TableProps } from "@/src/components";
+import {
+  Accordion,
+  AccordionProps,
+  ActionCard,
+  Table,
+  TableProps,
+} from "@/src/components";
 import {
   GET_CATEGORIES,
   GET_CHARGES_BY_STORE,
@@ -14,7 +20,14 @@ import { useDevice } from "@/src/hooks/use-device";
 import { formatMoney } from "@/src/utils/format-money";
 import { Feather, Ionicons } from "@expo/vector-icons";
 import { parsePhoneNumber } from "libphonenumber-js";
-import { FlatList, Image, Text, TouchableOpacity, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import * as Linking from "expo-linking";
 import { Barcode } from "expo-barcode-generator";
 import { useRouter } from "expo-router";
@@ -398,6 +411,7 @@ const Settings = () => {
         route.push("_/store/main");
       },
       canDeleteRow: false,
+      excludColumns: ["invoice"],
       withPrint: true,
       renderCell: {
         client: (client: Pick<ClientType, "id" | "fullName">) => {
@@ -473,7 +487,7 @@ const Settings = () => {
       onEventHandler(type, value) {
         switch (type) {
           case "print":
-            route.push("_/store/invoice/" + value.id);
+            route.push("_/store/payment-proof/" + value?.invoice?.id);
             break;
 
           default:
@@ -494,7 +508,26 @@ const Settings = () => {
 
   return (
     <FlatList
-      className="flex-1 p-6 bg-gray-50 pb-8"
+      className="flex-1 pb-8 bg-gray-50"
+      ListHeaderComponent={() => (
+        <ScrollView horizontal className="p-6" showsHorizontalScrollIndicator={false}>
+          <View>
+            <ActionCard
+              title="Documentos"
+              icon="documents-outline"
+              description="Nota de crédito, Nota de débito, Recibo..."
+              onPress={() => route.push("/_/store/documents/")}
+            />
+          </View>
+          <View className={type !== 'PHONE'?'ml-3':'ml-3 mr-14'}>
+            <ActionCard
+              title="Emitir documento .XML"
+              icon={<Text className="font-bold text-lg">SAFT-AO</Text>}
+              description="Ficheiro eletrónico de auditoria"
+            />
+          </View>
+        </ScrollView>
+      )}
       data={tables.filter((item) => {
         if (item.name === "Produtos" && store.saleType === "SERVICE")
           return false;
@@ -503,14 +536,13 @@ const Settings = () => {
         return true;
       })}
       renderItem={({ item, index }) => (
-        <>
+        <View className="mx-6" key={index}>
           <Accordion
             style={{
               marginBottom: tables.length - 1 === index ? 30 : 15,
             }}
             title={item.name}
             icon={item.icon}
-            key={index}
             withAddEvent={item.withAddEvent}
           >
             <Table
@@ -524,7 +556,7 @@ const Settings = () => {
               {...item}
             />
           </Accordion>
-        </>
+        </View>
       )}
     />
   );

@@ -116,7 +116,6 @@ export const GET_SERVICES_BY_STORE = gql`
     getServices(storeId: $storeId, filter: $filter) {
       id
       name
-      image
       description
       price
       category {
@@ -166,7 +165,6 @@ export const GET_SALE_BY_ID = gql`
           id
           name
           description
-          image
           price
           category {
             type
@@ -188,7 +186,6 @@ export const GET_STORE_REPORT = gql`
           services {
             id
             name
-            image
             category {
               id
               name
@@ -255,6 +252,88 @@ export const GET_CLIENTS = gql`
       email
       address
       type
+    }
+  }
+`;
+export const GET_INVOICES = gql`
+  query GetInvoices($filter: FilterInvoiceInput) {
+    getInvoices(filter: $filter) {
+      id
+      number
+      amount
+      saleId
+      observation
+      retention
+      status
+      dueDate
+      createdAt
+      updatedAt
+      sale {
+        id
+        client {
+          id
+          fullName
+          nif
+        }
+        orders {
+          id
+          products {
+            id
+            price
+            name
+            code
+            stock {
+              id
+              quantity
+              supplier {
+                id
+                fullName
+              }
+            }
+            category {
+              id
+              name
+              type
+              charges {
+                id
+                acronym
+                percentage
+              }
+            }
+            charges {
+              id
+              acronym
+              percentage
+            }
+          }
+          services {
+            id
+            price
+            name
+            code
+            category {
+              id
+              name
+              type
+              charges {
+                id
+                acronym
+                percentage
+              }
+            }
+            charges {
+              id
+              acronym
+              percentage
+            }
+          }
+        }
+      }
+      receipt {
+        id
+        number
+        status
+      }
     }
   }
 `;
@@ -330,12 +409,14 @@ export const GET_SALE_BY_STORE = gql`
           id
           name
           description
-          image
           price
           category {
             type
           }
         }
+      }
+      invoice {
+        id
       }
     }
   }
@@ -384,6 +465,19 @@ export const GET_CHARGE_BY_ID = gql`
   }
 `;
 
+export const GET_STORE_BY_ID = gql`
+  query GetStore($id: ID!) {
+    getStore(id: $id) {
+      id
+      address
+      designation
+      phone
+      globalSale
+      saleType
+    }
+  }
+`;
+
 export const GET_PRODUCT_BY_ID = gql`
   query GetProduct($id: ID!) {
     getProduct(id: $id) {
@@ -426,7 +520,6 @@ export const GET_SERVICE_BY_ID = gql`
     getService(id: $id) {
       id
       name
-      image
       description
       price
       categoryId
@@ -457,6 +550,10 @@ export const GET_INVOICE = gql`
       status
       number
       createdAt
+      updatedAt
+      dueDate
+      observation
+      retention
       sale {
         id
         client {
@@ -478,6 +575,7 @@ export const GET_INVOICE = gql`
             id
             price
             name
+            code
             category {
               id
               name
@@ -497,6 +595,7 @@ export const GET_INVOICE = gql`
             id
             price
             name
+            code
             category {
               id
               name

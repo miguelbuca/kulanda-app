@@ -27,12 +27,6 @@ const StoreLayout = () => {
           }}
         />
         <Stack.Screen
-          name="invoice"
-          options={{
-            presentation: undefined,
-          }}
-        />
-        <Stack.Screen
           name="payment"
           options={{
             title: "Efectuar pagamento",

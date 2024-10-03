@@ -32,20 +32,30 @@ export default function PrivateLayout() {
       setCompany(data.getCompany);
     },
   });
-  
+
+  useFocusEffect(() => {
+    if (!user.id) replace("/");
+  });
+
   return (
     <>
       <Stack
         screenOptions={{
-          headerShown: false,
+          headerShown: true,
           animation: "none",
         }}
       >
         <Stack.Screen
           options={{
-            title: "Loja",
+            title: "Estabelecimento",
           }}
-          name="store"
+          name="index"
+        />
+        <Stack.Screen
+          options={{
+            title: "Criar estabelecimento",
+          }}
+          name="create"
         />
       </Stack>
       <StatusBar style="dark" />

@@ -15,6 +15,8 @@ import { useAuth } from "../hooks/use-auth";
 import { storage } from "../services";
 import { useDevice } from "../hooks/use-device";
 import { useNav } from "../hooks/use-nav";
+import { useStore } from "../hooks/use-store";
+import { getMainIcon } from "../utils/icons-render";
 
 export type Tab = "PROFILE" | "MAIN" | "CHART" | "SCAN" | "SETTINGS";
 
@@ -31,6 +33,8 @@ export const StoreNav = () => {
   const { ativeTab: currentTab, setActiveTab: setCurrentTab } = useNav();
   const route = useRouter();
   const { type } = useDevice();
+
+  const { store } = useStore();
 
   const logOut = useCallback(() => {
     storage.deleteValueFor("x-tenant-username");
@@ -63,7 +67,7 @@ export const StoreNav = () => {
               <View>
                 <Ionicons
                   name={
-                    currentTab === "MAIN" ? "storefront" : "storefront-outline"
+                    getMainIcon(currentTab === "MAIN", store.saleType) as any
                   }
                   size={25}
                   color={currentTab === "MAIN" ? tintColor : "rgba(0,0,0,0.5)"}

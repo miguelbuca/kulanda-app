@@ -18,35 +18,108 @@ export const CREATE_SALE = gql`
 
 export const CREATE_INVOICE = gql`
   mutation CreateInvoice(
-    $amount: Int!
+    $amount: Float!
     $saleId: ID!
-    $digitalSignature: String!
     $status: InvoiceEnumType!
+    $dueDate: DateTime!
+    $observation: String
+    $retention: Float
+    $change: Float
   ) {
     createInvoice(
       amount: $amount
       saleId: $saleId
-      digitalSignature: $digitalSignature
       status: $status
+      dueDate: $dueDate
+      observation: $observation
+      retention: $retention
+      change: $change
     ) {
       id
       status
+      dueDate
+      observation
+      amount
     }
   }
 `;
 
 export const CREATE_RECEIPT = gql`
   mutation CreateReceipt(
-    $digitalSignature: String!
     $invoiceId: ID!
     $status: ReceiptEnumType! = ISSUED
     $payments: [ReceiptPaymentInput!]!
+    $observation: String
+    $dueDate: DateTime!
+    $amount: Float!
+    $change: Float
   ) {
     createReceipt(
       payments: $payments
       invoiceId: $invoiceId
-      digitalSignature: $digitalSignature
       status: $status
+      observation: $observation
+      dueDate: $dueDate
+      amount: $amount
+      change: $change
+    ) {
+      id
+      invoiceId
+    }
+  }
+`;
+
+export const CREATE_DEBIT_NOTE = gql`
+  mutation CreateDebitNote(
+    $invoiceId: ID!
+    $status: DebitNoteEnumType! = ISSUED
+    $observation: String
+    $retention: Float
+    $dueDate: DateTime!
+    $payments: [CreditNotePaymentInput!]!
+    $amount: Float!
+    $orders: [CreateOrderSaleInput!]!
+    $change: Float
+  ) {
+    createDebitNote(
+      payments: $payments
+      invoiceId: $invoiceId
+      status: $status
+      observation: $observation
+      dueDate: $dueDate
+      amount: $amount
+      retention: $retention
+      orders: $orders
+      change: $change
+    ) {
+      id
+      invoiceId
+    }
+  }
+`;
+
+export const CREATE_CREDIT_NOTE = gql`
+  mutation CreateCreditNote(
+    $invoiceId: ID!
+    $status: CreditNoteEnumType! = ISSUED
+    $observation: String
+    $retention: Float
+    $dueDate: DateTime!
+    $payments: [CreditNotePaymentInput!]!
+    $amount: Float!
+    $orders: [CreateOrderSaleInput!]!
+    $change: Float
+  ) {
+    createCreditNote(
+      payments: $payments
+      invoiceId: $invoiceId
+      status: $status
+      observation: $observation
+      dueDate: $dueDate
+      amount: $amount
+      retention: $retention
+      orders: $orders
+      change: $change
     ) {
       id
       invoiceId
@@ -162,6 +235,26 @@ export const CREATE_CHARGE = gql`
   }
 `;
 
+export const CREATE_STORE = gql`
+  mutation CreateStore(
+    $address: String!
+    $designation: String!
+    $phone: String!
+    $globalSale: String
+    $saleType: StoreSaleEnumType
+  ) {
+    createStore(
+      address: $address
+      designation: $designation
+      phone: $phone
+      globalSale: $globalSale
+      saleType: $saleType
+    ) {
+      id
+    }
+  }
+`;
+
 export const CREATE_PRODUCT = gql`
   mutation CreateProduct(
     $name: String!
@@ -194,7 +287,6 @@ export const CREATE_SERVICE = gql`
   mutation CreateService(
     $name: String!
     $description: String
-    $image: String
     $price: Float!
     $categoryId: ID!
     $charges: [ID!] = []
@@ -203,7 +295,6 @@ export const CREATE_SERVICE = gql`
     createService(
       name: $name
       description: $description
-      image: $image
       price: $price
       categoryId: $categoryId
       charges: $charges

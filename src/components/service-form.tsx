@@ -20,7 +20,6 @@ import { AvatarDinamic } from "./avatar-dinamic";
 const schema = z.object({
   name: z.string().min(2, "Nome is too short. Minimal length is 4 characters"),
   description: z.string().optional(),
-  image: z.string().optional(),
   price: z.number(),
   charges: z.string().optional(),
   categoryId: z.string(),
@@ -103,29 +102,14 @@ export const ServiceForm = ({ serviceId }: ServiceFormProps) => {
 
   return (
     <ScrollView className="flex-1 p-6">
-      <View className="flex justify-center items-center py-6">
-        <Controller
-          control={control}
-          render={({ field: { onChange, value } }) => (
-            <AvatarDinamic
-              image={value}
-              withUpload
-              onUpload={(asset) => onChange(asset?.uri)}
-            />
-          )}
-          name="image"
-        />
-      </View>
       <View className="flex flex-col  bg-white p-6 rounded-xl shadow-sm mb-28">
         <View
-          className={`flex ${
-            type !== "PHONE" ? "flex-row gap-x-4" : "flex-col"
-          } mt-4`}
+          className={`flex mt-4`}
         >
           <View
-            className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
+            className={`flex ${type !== "PHONE" ? "flex-1 flex-row gap-x-4" : "flex-col"} `}
           >
-            <View>
+            <View className="flex-1">
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value }, formState }) => (
@@ -140,7 +124,7 @@ export const ServiceForm = ({ serviceId }: ServiceFormProps) => {
                 name="name"
               />
             </View>
-            <View>
+            <View className="flex-1">
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value }, formState }) => (
@@ -168,11 +152,7 @@ export const ServiceForm = ({ serviceId }: ServiceFormProps) => {
                 name="price"
               />
             </View>
-          </View>
-          <View
-            className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}
-          >
-            <View>
+            <View className="flex-1">
               <Controller
                 control={control}
                 render={({ field: { onChange, value }, formState }) => (
@@ -182,7 +162,7 @@ export const ServiceForm = ({ serviceId }: ServiceFormProps) => {
                         (item: any) => item?.value == value
                       )?.[0]?.value
                     }
-                     placeholder="Categorias(nenhum)"
+                    placeholder="Categorias(nenhum)"
                     items={categoriesSelectData}
                     onValueChange={onChange}
                     errorMessage={formState.errors.categoryId?.message}
@@ -193,7 +173,6 @@ export const ServiceForm = ({ serviceId }: ServiceFormProps) => {
             </View>
           </View>
         </View>
-
         <View className={`flex flex-col ${type !== "PHONE" ? "flex-1" : ""} `}>
           <View>
             <Controller
@@ -205,7 +184,7 @@ export const ServiceForm = ({ serviceId }: ServiceFormProps) => {
                   placeholder="Descrição"
                   onChangeText={onChange}
                   onBlur={onBlur}
-                  className="h-[200px]"
+                  className="h-[200px] py-4"
                   errorMessage={formState.errors.description?.message}
                 />
               )}

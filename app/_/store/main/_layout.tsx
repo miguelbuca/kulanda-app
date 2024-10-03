@@ -15,6 +15,7 @@ import { useAuth } from "@/src/hooks/use-auth";
 import { Image } from "expo-image";
 import { useAssets } from "expo-asset";
 import { useNav } from "@/src/hooks/use-nav";
+import { getMainIcon } from "@/src/utils/icons-render";
 
 const StoreLayout = () => {
   const { user } = useAuth();
@@ -128,7 +129,7 @@ const StoreLayout = () => {
                 ),
                 tabBarIcon: ({ focused, color, size }) => (
                   <Ionicons
-                    name={focused ? "storefront" : "storefront-outline"}
+                    name={getMainIcon(focused, store.saleType) as any}
                     color={color}
                     size={size}
                   />

@@ -20,9 +20,11 @@ import { useQuery } from "@apollo/client";
 import { useStore } from "@/src/hooks/use-store";
 import { Button } from "@/src/components";
 import { useCompany } from "@/src/hooks/use-company";
+import { getApiFile } from "@/src/utils/get-api-file";
+import { getMainIcon } from "@/src/utils/icons-render";
 
 const Switch = () => {
-  const { replace } = useRouter();
+  const { replace, push } = useRouter();
   const { setStore } = useStore();
   const { company, setCompany } = useCompany();
   const [stores, setStores] = useState<StoreType[]>([]);
@@ -62,11 +64,11 @@ const Switch = () => {
                       className="h-24 w-24 "
                       resizeMode="stretch"
                       source={{
-                        uri: company?.logo,
+                        uri: getApiFile(company?.logo),
                       }}
                     />
                   ) : (
-                    <Ionicons name="storefront" size={96} color={"#ddd"} />
+                    <Ionicons name={"image"} size={96} color={"#ddd"} />
                   )}
                 </View>
                 <Text className="text-base font-semibold text-primary-500">
@@ -76,6 +78,16 @@ const Switch = () => {
                   <Text className="font-normal">NIF: </Text>
                   {company?.nif}
                 </Text>
+                <TouchableOpacity
+                  onPress={() => push("/_/establishment/create")}
+                >
+                  <View className="flex flex-row bg-primary-400 px-4 py-2 my-6 rounded-full items-center gap-x-2">
+                    <Text className="text-white">
+                      Adicionar estabelecimento
+                    </Text>
+                    <Ionicons name="add-circle" color={"#fff"} size={22} />
+                  </View>
+                </TouchableOpacity>
               </View>
             </>
           ) : null
@@ -84,6 +96,7 @@ const Switch = () => {
           <TouchableOpacity
             onPress={() => {
               setStore(item);
+              storage.save("_ksid", item.id);
               replace("/_/store/main");
             }}
             key={index}

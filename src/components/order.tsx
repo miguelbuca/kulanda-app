@@ -12,7 +12,15 @@ export interface OrderProps {
 }
 
 export const Order = ({ onClose }: OrderProps) => {
-  const { subtotalPrice, totalPrice, totalTaxes } = useOrder();
+  const {
+    list,
+    addItem,
+    removeItem,
+    deleteItem,
+    subtotalPrice,
+    totalPrice,
+    totalTaxes,
+  } = useOrder();
   const { type } = useDevice();
 
   const router = useRouter();
@@ -35,7 +43,12 @@ export const Order = ({ onClose }: OrderProps) => {
         </View>
       </View>
       <View className="flex-1 px-6">
-        <Orders />
+        <Orders
+          list={list}
+          addItem={addItem}
+          deleteItem={deleteItem}
+          removeItem={removeItem}
+        />
       </View>
       <View className="flex flex-col p-6 gap-y-4">
         <View className="flex flex-col">

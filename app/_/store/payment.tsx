@@ -1,17 +1,10 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  FlatList,
-  TouchableOpacity,
-  Platform,
-} from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React, { useCallback, useMemo, useState } from "react";
 import { useOrder } from "@/src/hooks/use-order";
 import { formatMoney } from "@/src/utils/format-money";
 import { Button, Input } from "@/src/components";
 import { ScrollView } from "react-native-gesture-handler";
-import { Feather, Ionicons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 import { useMutation, useQuery } from "@apollo/client";
 import {
@@ -30,8 +23,8 @@ import { Controller, useForm } from "react-hook-form";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useProof } from "@/src/hooks/use-proof";
 import { useCompany } from "@/src/hooks/use-company";
+import { getDueDate } from "@/src/utils/due-date";
 
 const schema = z.object({
   client: z.object({
@@ -39,6 +32,9 @@ const schema = z.object({
     id: z.string().optional(),
   }),
   state: z.string().optional(),
+  dueDate: z.number(),
+  observation: z.string().optional(),
+  retention: z.number().optional(),
 });
 
 type PaymentsType = {
@@ -69,14 +65,8 @@ const Payment = () => {
   const { type } = useDevice();
 
   const { store } = useStore();
-  const { company } = useCompany();
 
   const router = useRouter();
-
-  const { generateWebPDF } = useProof({
-    company,
-    store,
-  });
 
   const [createSale] = useMutation(CREATE_SALE, {
     client: client,
@@ -92,17 +82,16 @@ const Payment = () => {
       if (createInvoice.status === "PAID") {
         createReceipt({
           variables: {
-            invoiceId: createInvoice.id,
-            digitalSignature: "",
+            invoiceId: createInvoice?.id,
+            observation: createInvoice?.observation,
+            dueDate: createInvoice?.dueDate,
+            amount: createInvoice?.amount,
+            change,
             payments,
           },
         });
       }
-      if (Platform.OS === "web") {
-        generateWebPDF(createInvoice.id);
-        reset();
-        router.back();
-      }
+      router.navigate("/_/store/payment-proof/" + createInvoice.id);
     },
   });
 
@@ -130,6 +119,9 @@ const Payment = () => {
             }
           : { serviceId: id };
       });
+
+      const dueDate = getDueDate(values.dueDate);
+
       createSale({
         variables: {
           orders,
@@ -144,7 +136,10 @@ const Payment = () => {
               saleId: createSale?.id,
               amount: totalPrice,
               status: values.state,
-              digitalSignature: "",
+              dueDate,
+              change,
+              observation: values.observation,
+              retention: values.retention,
             },
           });
         },
@@ -158,10 +153,12 @@ const Payment = () => {
       state: "DRAFT",
     },
     values: {
+      dueDate: 0,
       client: {
-        fullName: selectedClient?.fullName,
+        fullName: selectedClient?.fullName?.toString(),
         id: selectedClient?.id,
       },
+      retention: 6.5,
     },
     resolver: zodResolver(schema),
   });
@@ -294,46 +291,124 @@ const Payment = () => {
               <Text className={`${type !== "PHONE" ? "text-6xl" : "text-2xl"}`}>
                 {formatMoney(subtotalPrice)}
               </Text>
-              <Text className="mt-2 text-xs text-primary-500">Valor todal</Text>
+              <Text className="mt-2 text-xs text-primary-500">Valor total</Text>
             </View>
             <View>
-              <View>
-                <Controller
-                  control={control}
-                  render={({ field: { value }, formState }) => (
-                    <Input
-                      placeholder="Nome do cliente"
-                      value={value?.fullName}
-                      editable={false}
-                      errorMessage={formState.errors.client?.message}
-                    />
-                  )}
-                  name="client"
-                />
+              <View
+                className={`flex ${
+                  type !== "PHONE" ? "flex-row gap-x-4" : "flex-col gap-y-10"
+                }`}
+              >
+                <View className="flex-1">
+                  <Controller
+                    control={control}
+                    render={({ field: { value, onChange }, formState }) => (
+                      <Input
+                        placeholder="Nome do cliente"
+                        value={value?.fullName}
+                        onChangeText={onChange}
+                        editable={false}
+                        errorMessage={formState.errors.client?.message}
+                      />
+                    )}
+                    name="client"
+                  />
+                </View>
+                <View className="flex-1">
+                  <Controller
+                    control={control}
+                    render={({ field: { onChange, value }, formState }) => (
+                      <Select
+                        value={value}
+                        placeholder="Data de vencimento (nenhum)"
+                        items={[
+                          {
+                            label: "15 Dias",
+                            value: 15,
+                          },
+                          {
+                            label: "30 Dias",
+                            value: 30,
+                          },
+                          {
+                            label: "45 Dias",
+                            value: 45,
+                          },
+                          {
+                            label: "60 Dias",
+                            value: 60,
+                          },
+                        ]}
+                        onValueChange={onChange}
+                        errorMessage={formState.errors.state?.message}
+                      />
+                    )}
+                    name="dueDate"
+                  />
+                </View>
               </View>
               <View>
                 <Controller
                   control={control}
-                  render={({ field: { onChange, value }, formState }) => (
-                    <Select
-                      value={value}
-                      placeholder="Situação da fatura (nenhum)"
-                      items={[
-                        {
-                          label: "Pago",
-                          value: "PAID",
-                        },
-                        {
-                          label: "Não Pago",
-                          value: "DRAFT",
-                        },
-                      ]}
-                      onValueChange={onChange}
-                      errorMessage={formState.errors.state?.message}
+                  render={({ field: { value: obs, onChange }, formState }) => (
+                    <Input
+                      placeholder="Observações"
+                      value={obs}
+                      onChangeText={onChange}
+                      multiline
+                      className="py-3"
+                      errorMessage={formState.errors.client?.message}
                     />
                   )}
-                  name="state"
+                  name="observation"
                 />
+              </View>
+              <View
+                className={`flex ${
+                  type !== "PHONE" ? "flex-row gap-x-4" : "flex-col gap-y-10"
+                }`}
+              >
+                <View className="flex-1">
+                  <Controller
+                    control={control}
+                    render={({ field: { onChange, value }, formState }) => (
+                      <Select
+                        value={value}
+                        placeholder="Situação da fatura (nenhum)"
+                        items={[
+                          {
+                            label: "Pago",
+                            value: "PAID",
+                          },
+                          {
+                            label: "Não Pago",
+                            value: "DRAFT",
+                          },
+                        ]}
+                        onValueChange={onChange}
+                        errorMessage={formState.errors.state?.message}
+                      />
+                    )}
+                    name="state"
+                  />
+                </View>
+                {store.saleType !== "PRODUCT" ? (
+                  <View className="flex-1">
+                    <Controller
+                      control={control}
+                      render={({ field: { value, onChange }, formState }) => (
+                        <Input
+                          placeholder="Taxa de Retenção"
+                          value={value?.toString()}
+                          onChangeText={(value) => onChange(Number(value))}
+                          keyboardType="numbers-and-punctuation"
+                          errorMessage={formState.errors.retention?.message}
+                        />
+                      )}
+                      name="retention"
+                    />
+                  </View>
+                ) : null}
               </View>
 
               {watch("state") === "PAID" ? (
@@ -347,7 +422,7 @@ const Payment = () => {
                     className={`flex ${
                       type === "PHONE"
                         ? "flex-col"
-                        : "flex-row items-center gap-4"
+                        : "flex-row items-center gap-2"
                     } `}
                   >
                     <View className="flex-1">
@@ -368,7 +443,7 @@ const Payment = () => {
                         }}
                       />
                     </View>
-                    <View className="flex flex-row items-center gap-x-4 flex-1">
+                    <View className="flex flex-row items-center gap-x-2 flex-1">
                       <View className="flex-1">
                         <Select
                           value={currentPayment?.type}

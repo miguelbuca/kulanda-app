@@ -1,31 +1,45 @@
-import { View, Text, Platform } from "react-native";
+import { View, Text, Platform, ScrollView, Dimensions } from "react-native";
 import React from "react";
 import { WebView } from "react-native-webview";
 import Constants from "expo-constants";
+import { Link } from "expo-router";
 
-export interface BrowserViewProps {
-  url: string;
+const { height } = Dimensions.get("window");
+
+export interface BrowserViewProps<T> {
+  html?: string;
+  iframe?: {
+    ref: T;
+  };
 }
 
-export const BrowserView = ({ url }: BrowserViewProps) => {
+export const BrowserView = <T,>({ iframe, html }: BrowserViewProps<T>) => {
   return Platform.OS !== "web" ? (
     <WebView
       style={{
         flex: 1,
-        marginTop: Constants.statusBarHeight,
-        backgroundColor: 'red'
+        marginHorizontal: 16,
+        marginVertical: 20,
+        backgroundColor: "transparent",
       }}
-      onError={(error) => console.log(error)}
-      originWhitelist={['*']}
-      source={{ html: '<h1><center>Hello world</center></h1>' }}
+      originWhitelist={["*"]}
+      source={{ html: html ?? "" }}
     />
   ) : (
-    <iframe
-      style={{
-        flex: 1,
-        border: "none",
-      }}
-      src={url}
-    />
+    <View className="relative justify-center items-center">
+      <iframe
+        ref={iframe?.ref as React.LegacyRef<HTMLIFrameElement>}
+        style={{
+          border: "none",
+          width: "794px",
+          height: height,
+          top: 0,
+          left: 0,
+          padding: 0,
+          margin: 0,
+        }}
+        srcDoc={html}
+      />
+    </View>
   );
 };
